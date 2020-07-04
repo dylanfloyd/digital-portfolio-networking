@@ -1,0 +1,23 @@
+{% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
+
+{% block content %}
+<h1>Specialized Interests</h1>
+    <p>Description: Below is a list of projects that based on your list of specialized interests..</p>
+<p><a href="{{ url_for('user.change_password') }}">Edit my interests - Change Password</a></p>
+
+{#{% from "common/form_macros.html" import render_field, render_submit_field %}#}
+{#<form action="" method="POST" class="form" role="form">#}
+{#  <div class="row">#}
+{#    <div class="col-sm-6 col-md-5 col-lg-4">#}
+{#    {{ form.hidden_tag() }}#}
+{##}
+{#    {{ render_field(form.first_name, tabindex=240) }}#}
+{##}
+{#    {{ render_field(form.last_name, tabindex=250) }}#}
+{##}
+{#    {{ render_submit_field(form.submit, tabindex=280) }}#}
+{#    </div>#}
+{#  </div>#}
+{#</form>#}
+
+{% endblock %}
