@@ -119,3 +119,4 @@ ENV/
 app.sqlite
 app/local_settings.py
 
+db.sqlite3
