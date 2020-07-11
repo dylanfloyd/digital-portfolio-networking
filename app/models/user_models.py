@@ -58,6 +58,10 @@ class UsersRoles(db.Model):
 
 # Define the User profile form
 class UserProfileForm(FlaskForm):
+
+    user_bio = StringField('Bio', validators=[
+        validators.DataRequired('User biography is required.')
+    ])
     first_name = StringField('First name', validators=[
         validators.DataRequired('First name is required')])
     last_name = StringField('Last name', validators=[

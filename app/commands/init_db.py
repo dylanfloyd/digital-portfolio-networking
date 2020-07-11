@@ -11,6 +11,7 @@ from flask_script import Command
 
 from app import db
 from app.models.user_models import User, Role
+from app.models.project_models import Project
 
 class InitDbCommand(Command):
     """ Initialize the database."""
@@ -38,6 +39,8 @@ def create_users():
     # Add users
     user = find_or_create_user(u'Admin', u'Example', u'admin@example.com', 'Password1', admin_role)
     user = find_or_create_user(u'Member', u'Example', u'member@example.com', 'Password1')
+    # user = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd@example.com', 'apwd')
+
 
     # Save to DB
     db.session.commit()
