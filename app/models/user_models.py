@@ -3,7 +3,7 @@
 # Authors: Ling Thio <ling.thio@gmail.com>
 
 from flask_user import UserMixin
-# from flask_user.forms import RegisterForm
+from flask_user.forms import RegisterForm
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators
 from app import db
@@ -25,6 +25,7 @@ class User(db.Model, UserMixin):
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
     first_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
     last_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
+    # bio = db.Column(db.Unicode(500), nullable=True, server_default=u'')
 
     # Relationships
     roles = db.relationship('Role', secondary='users_roles',
@@ -47,13 +48,13 @@ class UsersRoles(db.Model):
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
-# # Define the User registration form
-# # It augments the Flask-User RegisterForm with additional fields
-# class MyRegisterForm(RegisterForm):
-#     first_name = StringField('First name', validators=[
-#         validators.DataRequired('First name is required')])
-#     last_name = StringField('Last name', validators=[
-#         validators.DataRequired('Last name is required')])
+# Define the User registration form
+# It augments the Flask-User RegisterForm with additional fields
+class MyRegisterForm(RegisterForm):
+    first_name = StringField('First name', validators=[
+        validators.DataRequired('First name is required')])
+    last_name = StringField('Last name', validators=[
+        validators.DataRequired('Last name is required')])
 
 
 # Define the User profile form

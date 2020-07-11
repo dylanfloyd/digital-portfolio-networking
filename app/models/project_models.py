@@ -1,7 +1,7 @@
 from flask_user import UserMixin
 # from flask_user.forms import RegisterForm
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, validators
+from flask_wtf import FlaskForm, RecaptchaField
+from wtforms import StringField, TextAreaField, SubmitField, validators
 from app import db
 
 
@@ -31,12 +31,27 @@ from app import db
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
-    proj_title = db.Column(db.String(50), nullable=False)
-    proj_desc = db.Column(db.Unicode(255), server_default=u'')
+    proj_title = db.Column(db.String(50))
+    proj_desc = db.Column(db.String(255))
+    proj_link = db.Column(db.String(1000))
     date_added = db.Column(db.Date)
     num_favorites = db.Column(db.Integer)
 
+    # Relationships:
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+
+
+class ProjectForm(FlaskForm):
+
+    proj_title = StringField('Project Title', validators=[
+        validators.DataRequired('Project Title is required.')])
+    proj_desc = TextAreaField('Project description goes here.', validators=[
+        validators.DataRequired('Project description is required.')])
+    proj_link = StringField('Project Link', validators=[
+        validators.URL('Must provide a valid URL.'),
+        validators.DataRequired('Project Link is required.')
+    ])
+    submit = SubmitField('Save')
 
 
 # # Define the Role data model
