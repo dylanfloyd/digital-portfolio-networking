@@ -70,9 +70,9 @@
                     &nbsp; | &nbsp;
                     <a href="/main/network" class="text-white">Network</a>
                     &nbsp; | &nbsp;
-                    <a href="/user/change-password" class="text-white">Settings</a>
+                    <a href="/main/user_settings" class="text-white">Settings</a>
                     &nbsp; | &nbsp;
-                    <a href="{{ url_for('main.user_profile_page') }}" class="text-white">{{ current_user.first_name or current_user.username or current_user.email }}</a>
+                    <a href="{{ url_for('main.user_profile_page') }}" class="text-white">{{ current_user.first_name or current_user.username or current_user.email }}'s User Profile Page</a>
                     &nbsp; | &nbsp;
                     <a href="{{ url_for('user.logout') }}" class="text-white">Sign out</a>
                 {% else %}

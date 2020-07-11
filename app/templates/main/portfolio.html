@@ -13,7 +13,7 @@
     <div class="card text-white bg-dark mb-3 mr-3" style="min-width: max-content; min-height: 18rem">
         <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
             <h5 class="card-title ml-3 mr-3">
-                <a href="https://www.google.com" target="_blank" class="btn btn text-white text-left bg-dark" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Firstname Lastname</a>
+                <a href="https://www.google.com" target="_blank" class="btn btn text-white text-left bg-dark" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ current_user.first_name }} {{ current_user.last_name }}</a>
             </h5>
         </div>
         <div class="card-body" style="padding: 0">
@@ -124,7 +124,7 @@
             </div>
             <div class="card-footer mt-1 mb-1" style="padding: 0">
                 <div class="pull-left ml-3">
-                    <a href="https://www.google.com" target="_blank" class="btn" style="padding: 0">
+                    <a href="#" target="_blank" class="btn" style="padding: 0">
                         @username
                     </a>
                 </div>
@@ -133,6 +133,7 @@
                     <a href="#" class="btn" style="padding: 0"><3</a>
                 </div>
             </div>
+            <a href="/main/edit_project" class="btn text-white bg-dark">Edit Project</a>
         </div>
 
     </div>

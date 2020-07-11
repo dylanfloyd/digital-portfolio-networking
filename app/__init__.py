@@ -11,6 +11,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate, MigrateCommand
 from flask_user import UserManager
 from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager
 
 
 # Instantiate Flask extensions
