@@ -9,6 +9,7 @@ from flask_user import current_user, login_required, roles_required
 
 from app import db
 from app.models.user_models import UserProfileForm
+from app.models.project_models import ProjectForm
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
 flask_user_blueprint = Blueprint('flask_user', __name__, template_folder='templates')
@@ -187,7 +188,7 @@ def settings_page():
 @login_required
 def edit_project_page():
     # Initialize form
-    form = UserProfileForm(request.form, obj=current_user)
+    form = ProjectForm(request.form, obj=current_user)
 
     # Process valid POST
     if request.method == 'POST' and form.validate():
@@ -201,4 +202,5 @@ def edit_project_page():
         return redirect(url_for('main.user_portfolio_page'))
 
     # Process GET or invalid POST
-    return render_template('main/edit_project.html', form=form)
+    return render_template('main/edit_project_page.html', form=form)
+    # return render_template('main/../templates/flask_user/edit_project_page.html', form=form)
