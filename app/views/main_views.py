@@ -9,7 +9,7 @@ from flask_user import current_user, login_required, roles_required
 
 from app import db
 from app.models.user_models import UserProfileForm
-from app.models.project_models import ProjectForm
+from app.models.project_models import ProjectForm, Project
 from forms import NewProjectForm
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
@@ -190,6 +190,9 @@ def settings_page():
 def edit_project_page():
     # Initialize form
     form = ProjectForm(request.form, obj=current_user)
+    form.proj_title.data = "Example Project Title"
+    form.proj_link.data = "https://www.google.com"
+    form.proj_desc.data = "This example description says that clicking the link will send the user to google"
 
     # Process valid POST
     if request.method == 'POST' and form.validate():
@@ -211,24 +214,42 @@ def edit_project_page():
 @main_blueprint.route('/main/create_project', methods=['GET', 'POST'])
 @login_required
 def create_project():
-    form = NewProjectForm()
+    form = NewProjectForm(request.form)
+    form.title.data = "Example Project Title"
+    form.url.data = "https://www.google.com"
+    form.desc.data = "This example description says that clicking the link will send the user to google"
+
     if form.validate_on_submit():
         # post_new_project()
         # post_new_project(form)
         # return redirect(url_for('success'))
         # return redirect('/main/create_project/post_project', form=form)
-        project = NewProjectForm(
+
+        project_details = NewProjectForm([
             request.form['title'],
             request.form['url'],
             request.form['desc']
+        ])
+
+        #TODO: Possibly updated Project() parameters in project_models
+        new_project = Project(
+            proj_title=project_details.title,
+            proj_desc=project_details.desc,
+            proj_link=project_details.url
         )
-        db.session.add(project)
+        db.session.add(new_project)
         db.session.commit()
-        return redirect('main/portfolio')
+
+        #Tell user what happened:
+
+
+        # Redirect to home page
+        return redirect(url_for('main.user_portfolio_page'))
+        # return redirect('main/create_project=success', form=form)
 
     return render_template('main/create_project.html', form=form)
 
-@main_blueprint.route('/main/post_project', methods=['POST'])
+@main_blueprint.route('/main/create_project=success', methods=['POST'])
 # @main_blueprint.route('/main/create_project/post_project', methods=['POST'])
 @login_required
 def post_project():

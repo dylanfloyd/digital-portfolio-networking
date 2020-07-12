@@ -3,7 +3,7 @@ from flask_user import UserMixin
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextAreaField, SubmitField, validators
 from app import db
-from datetime import date
+from datetime import datetime
 
 
 # # Define the User data model. Make sure to add the flask_user.UserMixin !!
@@ -30,23 +30,28 @@ from datetime import date
 
 # Define the UserRoles association model
 class Project(db.Model):
+    # def __init__(self):
+        # self.date_created = datetime.today()
+
     __tablename__ = 'projects'
     id = db.Column(db.Integer(), primary_key=True)
     proj_title = db.Column(db.String(50), nullable=False)
     proj_desc = db.Column(db.String(255), nullable=False)
     proj_link = db.Column(db.String(1000), nullable=False, default="https://www.google.com")
-    date_added = db.Column(db.DateTime, nullable=False, default=date)
+    date_added = db.Column(db.DateTime, nullable=False, default=datetime.today())
     num_favorites = db.Column(db.Integer, nullable=False, default=0)
 
     # Relationships:
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
 
 
+
+
 class ProjectForm(FlaskForm):
 
     proj_title = StringField('Project Title', validators=[
         validators.DataRequired('Project Title is required.')])
-    proj_desc = TextAreaField('Project description goes here.', validators=[
+    proj_desc = TextAreaField('Project Description.', validators=[
         validators.DataRequired('Project description is required.')])
     proj_link = StringField('Project Link', validators=[
         validators.URL('Must provide a valid URL.'),
