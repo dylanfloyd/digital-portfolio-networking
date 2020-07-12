@@ -41,6 +41,11 @@ def create_users():
     user = find_or_create_user(u'Member', u'Example', u'member@example.com', 'Password1')
     # user = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd@example.com', 'apwd')
 
+    # Add dummy projects
+    project = create_project(proj_title='Insignia-Prototype',
+                             proj_desc='This description is a placeholder for the Insignia-Prototype project.',
+                             proj_link="https://www.google.com"
+                             )
 
     # Save to DB
     db.session.commit()
@@ -70,5 +75,22 @@ def find_or_create_user(first_name, last_name, email, password, role=None):
         db.session.add(user)
     return user
 
+def create_project(proj_title, proj_desc, proj_link):
+    """ Create new project """
+    project = Project(proj_title=proj_title,
+                      proj_desc=proj_desc,
+                      proj_link=proj_link,
+                      date_added=datetime.datetime.utcnow(),
+                      num_favorites=0)
+    db.session.add(project)
+    return project
+
+def find_project(proj_id):
+    """ Find project """
+    project = Project.query.filter(Project.id == proj_id).first()
+    if not project:
+        return -1
+    else:
+        return project
 
 

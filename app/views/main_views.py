@@ -10,9 +10,10 @@ from flask_user import current_user, login_required, roles_required
 from app import db
 from app.models.user_models import UserProfileForm
 from app.models.project_models import ProjectForm
+from forms import NewProjectForm
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
-flask_user_blueprint = Blueprint('flask_user', __name__, template_folder='templates')
+# project_blueprint = Blueprint('project', __name__, template_folder='templates')
 
 # The Home page is accessible to anyone
 @main_blueprint.route('/')
@@ -183,7 +184,7 @@ def settings_page():
 
 
 
-
+# @project_blueprint.route('/project/edit_project', methods=['GET', 'POST'])
 @main_blueprint.route('/main/edit_project', methods=['GET', 'POST'])
 @login_required
 def edit_project_page():
@@ -203,4 +204,52 @@ def edit_project_page():
 
     # Process GET or invalid POST
     return render_template('main/edit_project_page.html', form=form)
+    # return render_template('main/edit_project_page.html', form=form)
     # return render_template('main/../templates/flask_user/edit_project_page.html', form=form)
+
+
+@main_blueprint.route('/main/create_project', methods=['GET', 'POST'])
+@login_required
+def create_project():
+    form = NewProjectForm()
+    if form.validate_on_submit():
+        # post_new_project()
+        # post_new_project(form)
+        # return redirect(url_for('success'))
+        # return redirect('/main/create_project/post_project', form=form)
+        project = NewProjectForm(
+            request.form['title'],
+            request.form['url'],
+            request.form['desc']
+        )
+        db.session.add(project)
+        db.session.commit()
+        return redirect('main/portfolio')
+
+    return render_template('main/create_project.html', form=form)
+
+@main_blueprint.route('/main/post_project', methods=['POST'])
+# @main_blueprint.route('/main/create_project/post_project', methods=['POST'])
+@login_required
+def post_project():
+
+    # # form = NewProjectForm()
+    # # if form.validate_on_submit():
+    # #     return redirect(url_for('success'))
+    # # return render_template('index.html', form=form)
+    # project = NewProjectForm(
+    #     request.form['title'],
+    #     request.form['url'],
+    #     request.form['desc']
+    # )
+    project = NewProjectForm(
+        request.form['title'],
+        request.form['url'],
+        request.form['desc']
+    )
+
+    db.session.add(project)
+    db.session.commit()
+
+    return redirect('main/portfolio.html')
+

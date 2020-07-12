@@ -3,6 +3,7 @@ from flask_user import UserMixin
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextAreaField, SubmitField, validators
 from app import db
+from datetime import date
 
 
 # # Define the User data model. Make sure to add the flask_user.UserMixin !!
@@ -31,11 +32,11 @@ from app import db
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer(), primary_key=True)
-    proj_title = db.Column(db.String(50))
-    proj_desc = db.Column(db.String(255))
-    proj_link = db.Column(db.String(1000))
-    date_added = db.Column(db.Date)
-    num_favorites = db.Column(db.Integer)
+    proj_title = db.Column(db.String(50), nullable=False)
+    proj_desc = db.Column(db.String(255), nullable=False)
+    proj_link = db.Column(db.String(1000), nullable=False, default="https://www.google.com")
+    date_added = db.Column(db.DateTime, nullable=False, default=date)
+    num_favorites = db.Column(db.Integer, nullable=False, default=0)
 
     # Relationships:
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
