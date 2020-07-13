@@ -225,17 +225,12 @@ def create_project():
         # return redirect(url_for('success'))
         # return redirect('/main/create_project/post_project', form=form)
 
-        project_details = NewProjectForm([
-            request.form['title'],
-            request.form['url'],
-            request.form['desc']
-        ])
 
-        #TODO: Possibly updated Project() parameters in project_models
         new_project = Project(
-            proj_title=project_details.title,
-            proj_desc=project_details.desc,
-            proj_link=project_details.url
+            proj_title=request.form['title'],
+            proj_desc=request.form['desc'],
+            proj_link=request.form['url'],
+            user_id=current_user.id
         )
         db.session.add(new_project)
         db.session.commit()

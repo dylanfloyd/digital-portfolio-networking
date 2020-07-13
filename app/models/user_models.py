@@ -30,7 +30,7 @@ class User(db.Model, UserMixin):
     # Relationships
     roles = db.relationship('Role', secondary='users_roles',
                             backref=db.backref('users', lazy='dynamic'))
-    projects = db.relationship('Project', backref='project', lazy=True)
+    projects = db.relationship('Project', backref=db.backref('project', lazy=True))
 
 
 # Define the Role data model

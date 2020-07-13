@@ -22,8 +22,18 @@ class InitDbCommand(Command):
 
 def init_db():
     """ Initialize the database."""
+
+
+    # db.session.remove()
+    # db.session.commit()
+
     db.drop_all()
+    db.session.commit()
     db.create_all()
+    db.session.commit()
+
+
+
     create_users()
 
 
@@ -32,6 +42,7 @@ def create_users():
 
     # Create all tables
     db.create_all()
+    db.session.commit()
 
     # Adding roles
     admin_role = find_or_create_role('admin', u'Admin')
@@ -44,7 +55,8 @@ def create_users():
     # Add dummy projects
     project = create_project(proj_title='Insignia-Prototype',
                              proj_desc='This description is a placeholder for the Insignia-Prototype project.',
-                             proj_link="https://www.google.com"
+                             proj_link="https://www.google.com",
+                             cur_user=user.id
                              )
 
     # Save to DB
@@ -75,13 +87,15 @@ def find_or_create_user(first_name, last_name, email, password, role=None):
         db.session.add(user)
     return user
 
-def create_project(proj_title, proj_desc, proj_link):
+def create_project(proj_title, proj_desc, proj_link, cur_user):
     """ Create new project """
     project = Project(proj_title=proj_title,
                       proj_desc=proj_desc,
                       proj_link=proj_link,
-                      date_added=datetime.datetime.utcnow(),
-                      num_favorites=0)
+                      user_id=cur_user,
+                      date_added=datetime.datetime.today(),
+                      num_favorites=0
+                      )
     db.session.add(project)
     return project
 

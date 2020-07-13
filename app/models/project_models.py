@@ -6,6 +6,7 @@ from app import db
 from datetime import datetime
 
 
+
 # # Define the User data model. Make sure to add the flask_user.UserMixin !!
 # class SingleProject(db.Model, UserMixin):
 #     __tablename__ = 'projects'
@@ -30,15 +31,13 @@ from datetime import datetime
 
 # Define the UserRoles association model
 class Project(db.Model):
-    # def __init__(self):
-        # self.date_created = datetime.today()
-
     __tablename__ = 'projects'
     id = db.Column(db.Integer(), primary_key=True)
     proj_title = db.Column(db.String(50), nullable=False)
     proj_desc = db.Column(db.String(255), nullable=False)
     proj_link = db.Column(db.String(1000), nullable=False, default="https://www.google.com")
-    date_added = db.Column(db.DateTime, nullable=False, default=datetime.today())
+    date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    # date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     num_favorites = db.Column(db.Integer, nullable=False, default=0)
 
     # Relationships:
