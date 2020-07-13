@@ -27,6 +27,10 @@ def create_app(extra_config_settings={}):
     # Instantiate Flask
     app = Flask(__name__)
 
+    # Setup Flask-SQLAlchemy
+    db.init_app(app)
+
+
     # Load common settings
     app.config.from_object('app.settings')
     # Load environment specific settings
@@ -34,8 +38,6 @@ def create_app(extra_config_settings={}):
     # Load extra settings from extra_config_settings param
     app.config.update(extra_config_settings)
 
-    # Setup Flask-SQLAlchemy
-    db.init_app(app)
 
     # Setup Flask-Migrate
     migrate.init_app(app, db)
@@ -63,10 +65,15 @@ def create_app(extra_config_settings={}):
 
     # Setup Flask-User to handle user account related forms
     from .models.user_models import User
+    from .models.project_models import Project
     from .views.main_views import user_profile_page
+    from .views.main_views import edit_project_page
+    from .views.main_views import settings_page
+    from .views.main_views import create_project
 
     # Setup Flask-User
     user_manager = UserManager(app, db, User)
+    # user_manager2 = UserManager(app, db, Project)
 
     @app.context_processor
     def context_processor():
