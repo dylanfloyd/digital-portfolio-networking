@@ -1,4 +1,16 @@
-# Flask-User starter app v1.0
+# Insignia Prototype - GaTech OMSCS 6460 - Summer 2020
+The instructions below will explain how to run the web application locally. To avoid reinventing the wheel for this prototype, a starter app was used. A significant number of changes have been made and the two products are very different now. If you're interested in the what the starter app looks like, you can find it [here](https://github.com/lingthio/Flask-User-starter-app).
+
+After you've followed the instructions below, make sure to initialize the database before doing the runserver command:
+python manage.py init_db
+python manage.py runserver.
+
+Feel free to test out creating your own user or logging in with the demo user: member@example.com / Password1
+
+
+----------------------------------------------------------------------------------------
+
+Flask-User starter app v1.0
 
 This code base serves as starting point for writing your next Flask application.
 
