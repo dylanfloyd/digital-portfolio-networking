@@ -18,6 +18,29 @@
             <script src="{{ url_for('static', filename='bootstrap/js/respond.min.js') }}"></script>
         <![endif]-->
 
+        <!-- Attempt to Update Bootstrap -->
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+            <title>Insignia Prototype</title>
+          </head>
+          <body>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+          </body>
+        </html>
+
         <!-- Application specific CSS-->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     </head>
@@ -26,40 +49,40 @@
         <!-- Application specific HTML -->
 
         <!-- -- NAV BAR -->
-        <div id="header-div" class="clearfix with-margins">
-            <div class="pull-left"><a href="/"><h1 class="no-margins">Insignia Prototype</h1></a></div>
-            <div class="pull-right">
+        <div id="header-div" class="clearfix with-margins mt-0 mb-0 ml-0 mr-0" style="background-color: #3AAFA9">
+            <div class="pull-left  mt-1 ml-3 mb-3"><a href="/"><h1 class="no-margins text-white">Insignia Prototype</h1></a></div>
+            <div class="pull-right mt-3 mr-3">
 
 
 
 
 
                 {% if current_user.is_authenticated %}
-                    <a href="https://www.google.com">Google</a>
+                    <a href="https://www.google.com" class="text-white">Google</a>
                     &nbsp; | &nbsp;
-                    <a href="/main/portfolio">Portfolio</a>
+                    <a href="/main/portfolio" class="text-white">Portfolio</a>
                     &nbsp; | &nbsp;
-                    <a href="/main/favorites">Favorites</a>
+                    <a href="/main/favorites" class="text-white">Favorites</a>
                     &nbsp; | &nbsp;
-                    <a href="/main/trending">Trending</a>
+                    <a href="/main/trending" class="text-white">Trending</a>
                        &nbsp; | &nbsp;
-                    <a href="/main/specialize">Specialize</a>
+                    <a href="/main/specialize" class="text-white">Specialize</a>
                     &nbsp; | &nbsp;
-                    <a href="/main/network">Network</a>
+                    <a href="/main/network" class="text-white">Network</a>
                     &nbsp; | &nbsp;
-                    <a href="/user/change-password">Settings</a>
+                    <a href="/main/user_settings" class="text-white">Settings</a>
                     &nbsp; | &nbsp;
-                    <a href="{{ url_for('main.user_profile_page') }}">{{ current_user.first_name or current_user.username or current_user.email }}</a>
+                    <a href="{{ url_for('main.user_profile_page') }}" class="text-white">{{ current_user.first_name or current_user.username or current_user.email }}'s User Profile Page</a>
                     &nbsp; | &nbsp;
-                    <a href="{{ url_for('user.logout') }}">Sign out</a>
+                    <a href="{{ url_for('user.logout') }}" class="text-white">Sign out</a>
                 {% else %}
-                    <a href="{{ url_for('user.login') }}">Sign in</a>
+                    <a href="{{ url_for('user.login') }}" class="text-white">Sign in</a>
                 {% endif %}
             </div>
         </div>
         <hr class="no-margins"/>
 
-        <div id="main-div" class="with-margins">
+        <div id="main-div" style="background-color: #3AAFA9; padding-left: 3rem; padding-right: 3rem;">
         {% block pre_content %}{% endblock %}
 
         {# One-time system messages called Flash messages #}
@@ -76,7 +99,9 @@
             {%- endwith %}
         {% endblock %}
 
+        <div class="container-fluid" style="padding-left: 5rem; padding-right: 5rem; min-height: 50rem;">
         {% block content %}{% endblock %}
+        </div>
 
         {% block post_content %}{% endblock %}
         </div>
@@ -85,7 +110,7 @@
         <hr class="no-margins"/>
         <div id="footer-div" class="clearfix with-margins">
             <div class="pull-left">{{ user_manager.app_name }} v1.0</div>
-            <div class="pull-right">&copy; 2014 Insignia Prototype</div>
+            <div class="pull-right">&copy; Insignia Prototype</div>
         </div>
 
         <!-- Bootstrap JS -->

@@ -1,0 +1,47 @@
+{% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
+
+{% block content %}
+    <h2>{%trans%}Edit Your Project{%endtrans%}</h2>
+
+{#    {% from "common/form_macros.html" import render_field, render_submit_field %}#}
+{#    <form action="" method="POST" class="form" role="form">#}
+{#      <div class="row">#}
+{#        <div class="col-sm-6 col-md-5 col-lg-4">#}
+{#        {{ form.hidden_tag() }}#}
+{##}
+{#        {{ render_field(form.proj_title, tabindex=240) }}#}
+{##}
+{#        {{ render_field(form.proj_desc, tabindex=240) }}#}
+{##}
+{#        {{ render_field(form.proj_link, tabindex=250) }}#}
+{##}
+{#        {{ render_field(form.proj_tags, tabindex=250) }}#}
+{##}
+{#        {{ render_submit_field(form.submit, tabindex=280) }}#}
+{##}
+{#        <p class="mt-2"><a href="{{ url_for('user.change_password') }}">Change password</a></p>#}
+{##}
+{#        </div>#}
+{#      </div>#}
+{#    </form>#}
+
+<div class="card mt-3 bg-dark">
+    <div class="formwrapper">
+      <h2 class="title">New Project</h2>
+      <form method="POST" action="/main/edit_project">{{ form.csrf_token }}
+{#      <form method="POST" action="/main/create_project/post_project">#}
+{#      <form method="POST" action="{{ url_for('main.post_project') }}" role="form">#}
+          <div class="container col-centered">
+              <div class="form-control" type="text">{{ form.title.label }} {{ form.title(size=20) }}</div>
+              <div class="form-control" type="text">{{ form.url.label }} {{ form.url }}</div>
+              <div class="form-control" type="text">{{ form.desc.label }} {{ form.desc }}</div>
+              <div class="form-control" type="text">{{ form.tags.label }} {{ form.tags }}</div>
+
+              {{ form.submit }}
+          </div>
+      </form>
+    </div>
+</div>
+
+
+{% endblock %}

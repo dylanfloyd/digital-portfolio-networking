@@ -11,6 +11,7 @@ from flask_script import Command
 
 from app import db
 from app.models.user_models import User, Role
+from app.models.project_models import Project
 
 class InitDbCommand(Command):
     """ Initialize the database."""
@@ -21,8 +22,18 @@ class InitDbCommand(Command):
 
 def init_db():
     """ Initialize the database."""
+
+
+    # db.session.remove()
+    # db.session.commit()
+
     db.drop_all()
+    db.session.commit()
     db.create_all()
+    db.session.commit()
+
+
+
     create_users()
 
 
@@ -31,6 +42,7 @@ def create_users():
 
     # Create all tables
     db.create_all()
+    db.session.commit()
 
     # Adding roles
     admin_role = find_or_create_role('admin', u'Admin')
@@ -38,6 +50,14 @@ def create_users():
     # Add users
     user = find_or_create_user(u'Admin', u'Example', u'admin@example.com', 'Password1', admin_role)
     user = find_or_create_user(u'Member', u'Example', u'member@example.com', 'Password1')
+    # user = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd@example.com', 'apwd')
+
+    # Add dummy projects
+    project = create_project(proj_title='Insignia-Prototype',
+                             proj_desc='This description is a placeholder for the Insignia-Prototype project.',
+                             proj_link="https://www.google.com",
+                             cur_user=1 #user.id
+                             )
 
     # Save to DB
     db.session.commit()
@@ -67,5 +87,24 @@ def find_or_create_user(first_name, last_name, email, password, role=None):
         db.session.add(user)
     return user
 
+def create_project(proj_title, proj_desc, proj_link, cur_user):
+    """ Create new project """
+    project = Project(proj_title=proj_title,
+                      proj_desc=proj_desc,
+                      proj_link=proj_link,
+                      user_id=cur_user,
+                      date_added=datetime.datetime.today(),
+                      num_favorites=0
+                      )
+    db.session.add(project)
+    return project
+
+def find_project(proj_id):
+    """ Find project """
+    project = Project.query.filter(Project.id == proj_id).first()
+    if not project:
+        return -1
+    else:
+        return project
 
 
