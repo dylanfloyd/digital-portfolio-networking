@@ -56,7 +56,7 @@ def create_users():
     project = create_project(proj_title='Insignia-Prototype',
                              proj_desc='This description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.google.com",
-                             cur_user=user.id
+                             cur_user=1 #user.id
                              )
 
     # Save to DB

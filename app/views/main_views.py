@@ -9,8 +9,8 @@ from flask_user import current_user, login_required, roles_required
 
 from app import db
 from app.models.user_models import UserProfileForm
-from app.models.project_models import ProjectForm, Project
-from forms import NewProjectForm
+from app.models.project_models import EditProjectForm, NewProjectForm, Project
+# from forms import NewProjectForm
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
 # project_blueprint = Blueprint('project', __name__, template_folder='templates')
@@ -59,6 +59,11 @@ def user_profile_page():
 @main_blueprint.route('/main/portfolio', methods=['GET', 'POST'])
 @login_required
 def user_portfolio_page():
+    if request.method == 'GET':
+        proj_search_result = Project.query.filter(Project.id == 1).first()
+        result_title = proj_search_result.proj_title
+
+
     # # Initialize form
     # form = UserProfileForm(request.form, obj=current_user)
     #
@@ -74,7 +79,7 @@ def user_portfolio_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/portfolio.html')  #, form=form)
+    return render_template('main/portfolio.html', value=result_title)  #, form=form)
 
 
 @main_blueprint.route('/main/favorites', methods=['GET', 'POST'])
@@ -189,15 +194,40 @@ def settings_page():
 @login_required
 def edit_project_page():
     # Initialize form
-    form = ProjectForm(request.form, obj=current_user)
-    form.proj_title.data = "Example Project Title"
-    form.proj_link.data = "https://www.google.com"
-    form.proj_desc.data = "This example description says that clicking the link will send the user to google"
+    #TODO: Remove ex_proj later. Only for demonstration in Milestone 2
+
+    proj_search_result = Project.query.filter(Project.id == 1).first()
+    # print(proj_search_result)
+    # print("proj_search_result found!!!")
+    previous_proj_form = EditProjectForm(
+        title=proj_search_result.proj_title,
+        url=proj_search_result.proj_link,
+        desc=proj_search_result.proj_desc,
+        tags=proj_search_result.proj_tags
+    )
+
+    # ex_proj = Project.query.filter(Project.id==1).first()
+    # form = EditProjectForm(request.form)
+    # form.title = ex_proj.proj_title
+    # form.url = ex_proj.proj_link
+    # form.desc = ex_proj.proj_desc
+    # form.tags = ex_proj.proj_tags
+
+    # form.proj_title = "Example Project Title"
+    # form.proj_link = "https://www.google.com"
+    # form.proj_desc = "This example description says that clicking the link will send the user to google"
+    # form.proj_tags = "#These #Are #Some #Example #ProjectTags #That #Can #B #Used #To #HelpUsersFindYourWork"
 
     # Process valid POST
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST' and previous_proj_form.validate():
         # Copy form fields to user_profile fields
-        form.populate_obj(current_user)
+        proj_search_result.data = dict(
+            proj_title=request.form['title'],
+            proj_desc=request.form['desc'],
+            proj_link=request.form['url'],
+            proj_tags=request.form['tags']
+        )
+        # form.populate_obj(current_user)
 
         # Save user_profile
         db.session.commit()
@@ -205,8 +235,20 @@ def edit_project_page():
         # Redirect to home page
         return redirect(url_for('main.user_portfolio_page'))
 
+    # else:
+    #     form = EditProjectForm(request.form)
+    #     # form.title = ex_proj.proj_title
+    #     # form.url = ex_proj.proj_link
+    #     # form.desc = ex_proj.proj_desc
+    #     # form.tags = ex_proj.proj_tags
+    #     form.proj_title = "Example Project Title"
+    #     form.proj_link = "https://www.google.com"
+    #     form.proj_desc = "This example description says that clicking the link will send the user to google"
+    #     form.proj_tags = "#These #Are #Some #Example #ProjectTags #That #Can #B #Used #To #HelpUsersFindYourWork"
+    #     db.session.commit()
+
     # Process GET or invalid POST
-    return render_template('main/edit_project_page.html', form=form)
+    return render_template('main/edit_project_page.html', form=previous_proj_form) #form)
     # return render_template('main/edit_project_page.html', form=form)
     # return render_template('main/../templates/flask_user/edit_project_page.html', form=form)
 
@@ -218,6 +260,7 @@ def create_project():
     form.title.data = "Example Project Title"
     form.url.data = "https://www.google.com"
     form.desc.data = "This example description says that clicking the link will send the user to google"
+    form.tags.data = "#Project #Tags"
 
     if form.validate_on_submit():
         # post_new_project()
@@ -230,6 +273,7 @@ def create_project():
             proj_title=request.form['title'],
             proj_desc=request.form['desc'],
             proj_link=request.form['url'],
+            proj_tags=request.form['tags'],
             user_id=current_user.id
         )
         db.session.add(new_project)
@@ -243,6 +287,8 @@ def create_project():
         # return redirect('main/create_project=success', form=form)
 
     return render_template('main/create_project.html', form=form)
+
+
 
 @main_blueprint.route('/main/create_project=success', methods=['POST'])
 # @main_blueprint.route('/main/create_project/post_project', methods=['POST'])

@@ -10,11 +10,12 @@
     <div class="col-sm-6 col-md-5 col-lg-4">
     {{ form.hidden_tag() }}
 
-    {{ render_field(form.user_bio, tabindex=240) }}
 
     {{ render_field(form.first_name, tabindex=240) }}
 
     {{ render_field(form.last_name, tabindex=250) }}
+
+    {{ render_field(form.user_bio, tabindex=240) }}
 
     {{ render_submit_field(form.submit, tabindex=280) }}
 

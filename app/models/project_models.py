@@ -4,29 +4,10 @@ from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextAreaField, SubmitField, validators
 from app import db
 from datetime import datetime
+from wtforms.validators import DataRequired, Length, Email, URL
 
 
 
-# # Define the User data model. Make sure to add the flask_user.UserMixin !!
-# class SingleProject(db.Model, UserMixin):
-#     __tablename__ = 'projects'
-#     id = db.Column(db.Integer, primary_key=True)
-#
-#     # User authentication information (required for Flask-User)
-#     email = db.Column(db.Unicode(255), nullable=False, server_default=u'', unique=True)
-#     email_confirmed_at = db.Column(db.DateTime())
-#     password = db.Column(db.String(255), nullable=False, server_default='')
-#     # reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
-#     active = db.Column(db.Boolean(), nullable=False, server_default='0')
-#
-#     # User information
-#     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
-#     first_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
-#     last_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
-#
-#     # Relationships
-#     roles = db.relationship('Role', secondary='users_roles',
-#                             backref=db.backref('users', lazy='dynamic'))
 
 
 # Define the UserRoles association model
@@ -39,6 +20,7 @@ class Project(db.Model):
     date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     num_favorites = db.Column(db.Integer, nullable=False, default=0)
+    proj_tags = db.Column(db.String(1000), nullable=False, default="#Project #Tags")
 
     # Relationships:
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
@@ -46,17 +28,47 @@ class Project(db.Model):
 
 
 
-class ProjectForm(FlaskForm):
+class EditProjectForm(FlaskForm):
 
-    proj_title = StringField('Project Title', validators=[
-        validators.DataRequired('Project Title is required.')])
-    proj_desc = TextAreaField('Project Description.', validators=[
-        validators.DataRequired('Project description is required.')])
-    proj_link = StringField('Project Link', validators=[
-        validators.URL('Must provide a valid URL.'),
-        validators.DataRequired('Project Link is required.')
-    ])
+
+    title = StringField('Project Title', [
+        DataRequired()])
+    url = StringField('Project Link', [
+        DataRequired(),
+        URL(message=('Not a valid web address.'))])
+    desc = StringField('Project Desc.', [
+        DataRequired(),
+        Length(min=4, message=('Your message is too short.'))])
+    tags = StringField('#Specialization #Tags')
+
+
+    # title = StringField('Project Title', validators=[
+    #     validators.DataRequired('Project Title is required.')])
+    # desc = TextAreaField('Project Description', validators=[
+    #     validators.DataRequired('Project description is required.')])
+    # url = StringField('Project Link', validators=[
+    #     validators.URL('Must provide a valid URL.'),
+    #     validators.DataRequired('Project Link is required.')
+    # ]),
+    # tags = StringField('#Specialization #Tags', validators=[
+    #     validators.DataRequired('At least one hashtag is required.')
+    # ])
     submit = SubmitField('Save')
+
+
+class NewProjectForm(FlaskForm):
+    """Contact form."""
+    title = StringField('Project Title', [
+        DataRequired()])
+    url = StringField('Project Link', [
+        DataRequired(),
+        URL(message=('Not a valid web address.'))])
+    desc = StringField('Project Desc.', [
+        DataRequired(),
+        Length(min=4, message=('Your message is too short.'))])
+    tags = StringField('#Specialization #Tags')
+
+    submit = SubmitField('Submit')
 
 
 # # Define the Role data model
