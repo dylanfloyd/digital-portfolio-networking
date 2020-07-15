@@ -31,15 +31,15 @@ class Project(db.Model):
 class EditProjectForm(FlaskForm):
 
 
-    title = StringField('Project Title', [
+    title = StringField('Project Title: ', [
         DataRequired()])
-    url = StringField('Project Link', [
+    url = StringField('Project Link: ', [
         DataRequired(),
         URL(message=('Not a valid web address.'))])
-    desc = StringField('Project Desc.', [
+    desc = TextAreaField('Project Desc: ', [
         DataRequired(),
         Length(min=4, message=('Your message is too short.'))])
-    tags = StringField('#Specialization #Tags')
+    tags = StringField('#Specialization #Tags: ')
 
 
     # title = StringField('Project Title', validators=[
