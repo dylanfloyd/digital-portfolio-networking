@@ -64,8 +64,14 @@ def user_profile_page():
 @login_required
 def user_portfolio_page():
     if request.method == 'GET':
-        proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
+        projects = current_user.projects
+        # print(projects)
+        # proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
 
+    form = request.form
+    if request.method =='POST':
+        proj_id = form.get('edit_button')
+        return render_template('/main/edit_project.html', proj_id=proj_id)
 
     # # Initialize form
     # form = UserProfileForm(request.form, obj=current_user)
@@ -82,7 +88,7 @@ def user_portfolio_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/portfolio.html', current_user=current_user, project=proj_search_result)  #, form=form)
+    return render_template('main/portfolio.html', current_user=current_user, projects=projects)  #, form=form)
 
 
 @main_blueprint.route('/main/favorites', methods=['GET', 'POST'])
@@ -199,7 +205,7 @@ def edit_project_page():
     # Initialize form
     #TODO: Remove ex_proj later. Only for demonstration in Milestone 2
 
-    proj_search_result = Project.query.filter(Project.id == 1).first()
+    proj_search_result = Project.query.filter(Project.id == request.proj_id).first() #should only ever be one b/c unique
     # print(proj_search_result)
     # print("proj_search_result found!!!")
     previous_proj_form = EditProjectForm(
@@ -209,17 +215,6 @@ def edit_project_page():
         tags=proj_search_result.proj_tags
     )
 
-    # ex_proj = Project.query.filter(Project.id==1).first()
-    # form = EditProjectForm(request.form)
-    # form.title = ex_proj.proj_title
-    # form.url = ex_proj.proj_link
-    # form.desc = ex_proj.proj_desc
-    # form.tags = ex_proj.proj_tags
-
-    # form.proj_title = "Example Project Title"
-    # form.proj_link = "https://www.google.com"
-    # form.proj_desc = "This example description says that clicking the link will send the user to google"
-    # form.proj_tags = "#These #Are #Some #Example #ProjectTags #That #Can #B #Used #To #HelpUsersFindYourWork"
 
     # Process valid POST
     if request.method == 'POST' and previous_proj_form.validate():
@@ -284,7 +279,7 @@ def create_project():
             proj_desc=request.form['desc'],
             proj_link=request.form['url'],
             proj_tags=request.form['tags'],
-            user_id=current_user.id
+            creator=current_user
         )
         db.session.add(new_project)
         db.session.commit()

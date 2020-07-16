@@ -3,6 +3,7 @@
 {% block content %}
 
 {#    {{% user_projects=select * from  }}#}
+    {% from "common/form_macros.html" import render_card %}
 
     <h1 style="text-align: center">Portfolio</h1>
 {#    <p>Profile Button: First Last</p>#}
@@ -113,36 +114,39 @@
             </div>
         </div>
 
-       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
-            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
-                <small class="text-muted pull-left ml-3">Project-Type</small>
-                <small class="text-muted pull-right mr-3">{{ project.date_added.strftime('%Y-%m-%d') }}</small>
-            </div>
-            <div class="card-body" style="padding: 0">
-                <h5 class="card-title ml-3 mr-3">
-                    <a href="{{ project.proj_link }}" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>
+{#       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">#}
+{#            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">#}
+{#                <small class="text-muted pull-left ml-3">Project-Type</small>#}
+{#                <small class="text-muted pull-right mr-3">{{ project.date_added.strftime('%Y-%m-%d') }}</small>#}
+{#            </div>#}
+{#            <div class="card-body" style="padding: 0">#}
+{#                <h5 class="card-title ml-3 mr-3">#}
+{#                    <a href="{{ project.proj_link }}" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>#}
                     {#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>#}
                 {#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Short Proj. Title Button</a>#}
-                </h5>
-
-                <p class="card-text ml-4 mr-4">{{ project.proj_desc }}</p>
+{#                </h5>#}
+{##}
+{#                <p class="card-text ml-4 mr-4">{{ project.proj_desc }}</p>#}
 {#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
-            </div>
-            <div class="card-footer mt-1 mb-1" style="padding: 0">
-                <div class="pull-left ml-3">
-                    <a href="#" target="_blank" class="btn" style="padding: 0">
-                        {{ current_user.email }}
+{#            </div>#}
+{#            <div class="card-footer mt-1 mb-1" style="padding: 0">#}
+{#                <div class="pull-left ml-3">#}
+{#                    <a href="#" target="_blank" class="btn" style="padding: 0">#}
+{#                        {{ current_user.email }}#}
 {#                        @username#}
-                    </a>
-                </div>
-                <div class="pull-right mr-3">
-                    <small class="text-muted">1.1k</small>
-                    <a href="#" class="btn" style="padding: 0"><3</a>
-                </div>
-            </div>
-            <a href="/main/edit_project" class="btn text-white bg-dark">Edit Project</a>
-        </div>
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="pull-right mr-3">#}
+{#                    <small class="text-muted">1.1k</small>#}
+{#                    <a href="#" class="btn" style="padding: 0"><3</a>#}
+{#                </div>#}
+{#            </div>#}
+{#            <a href="/main/edit_project" class="btn text-white bg-dark">Edit Project</a>#}
+{#        </div>#}
 
+        {% for project in projects %}
+            {{ render_card(project, current_user) }}
+        {% endfor %}
     </div>
 
 
