@@ -5,7 +5,7 @@
 
 from flask import Blueprint, redirect, render_template
 from flask import request, url_for
-from flask_user import current_user, login_required, roles_required
+from flask_user import current_user, login_required, roles_required, current_app
 
 from app import db
 from app.models.user_models import UserProfileForm
@@ -205,45 +205,50 @@ def edit_project_page(proj_id):
     # Initialize form
     #TODO: Remove ex_proj later. Only for demonstration in Milestone 2
 
-    proj_search_result = Project.query.filter(Project.id == proj_id).first() #should only ever be one b/c unique
-    proj_creator = proj_search_result.creator
-    # if proj_creator == current_user:
-    previous_proj_form = EditProjectForm(
-        title=proj_search_result.proj_title,
-        url=proj_search_result.proj_link,
-        desc=proj_search_result.proj_desc,
-        tags=proj_search_result.proj_tags
-    )
+    this_project = Project.query.filter(Project.id == proj_id).first() #should only ever be one b/c unique
+    this_project_creator_id = this_project.creator_id
+
+    if this_project_creator_id == current_user.id: #Ensures that you can only edit projects if you made it.
+        previous_proj_form = EditProjectForm(
+            title=this_project.proj_title,
+            url=this_project.proj_link,
+            desc=this_project.proj_desc,
+            tags=this_project.proj_tags
+        )
 
 
-    # Process valid POST
-    if request.method == 'POST' and previous_proj_form.validate():
-        # Copy form fields to user_profile fields
-        # proj_search_result.data = dict(
-        #     proj_title=request.form['title'],
-        #     proj_desc=request.form['desc'],
-        #     proj_link=request.form['url'],
-        #     proj_tags=request.form['tags']
-        # )
-        # form.populate_obj(current_user)
+        # Process valid POST
+        if request.method == 'POST' and previous_proj_form.validate():
+            # Copy form fields to user_profile fields
+            # proj_search_result.data = dict(
+            #     proj_title=request.form['title'],
+            #     proj_desc=request.form['desc'],
+            #     proj_link=request.form['url'],
+            #     proj_tags=request.form['tags']
+            # )
+            # form.populate_obj(current_user)
 
-        #Update project in database:
-        proj_search_result.proj_title = request.form['title']
-        proj_search_result.proj_desc = request.form['desc']
-        proj_search_result.proj_link = request.form['url']
-        proj_search_result.proj_tags = request.form['tags']
-
-
-        # Save user_profile
-        db.session.commit()
-
-        # Redirect to home page
-        return redirect(url_for('main.user_portfolio_page'))
+            #Update project in database:
+            this_project.proj_title = request.form['title']
+            this_project.proj_desc = request.form['desc']
+            this_project.proj_link = request.form['url']
+            this_project.proj_tags = request.form['tags']
 
 
-    # Process GET or invalid POST
-    return render_template('main/edit_project_page.html', form=previous_proj_form) #form)
+            # Save user_profile
+            db.session.commit()
 
+            # Redirect to home page
+            return redirect(url_for('main.user_portfolio_page'))
+
+
+        # Process GET or invalid POST
+        return render_template('main/edit_project_page.html', form=previous_proj_form) #form)
+
+    else:
+        current_app.login_manager.unauthorized()
+        # current_app.login_manager.unauthorized_callback("You do not have permission to edit this project.")
+        return redirect(url_for('main.home_page'))
 
 @main_blueprint.route('/main/create_project', methods=['GET', 'POST'])
 @login_required

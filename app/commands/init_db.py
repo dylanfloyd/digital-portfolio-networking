@@ -58,6 +58,11 @@ def create_users():
     db.session.add(user2)
     db.session.commit()
 
+    user3 = find_or_create_user(u'Dylan', u'Floyd', u'dfloyd7@gatech.edu', 'Password1')
+    db.session.add(user2)
+    db.session.commit()
+
+
 
     # Add dummy projects
     project1 = create_project(proj_title='Insignia-Prototype 1',
@@ -83,6 +88,18 @@ def create_users():
                              creator=user2 #user.id
                              )
     db.session.add(project3)
+    db.session.commit()
+
+
+    project4 = create_project(proj_title='Insignia-Prototype Web App',
+                             proj_desc="Here's a link to the home page of the web app I created in my Ed Tech class."
+                                       "It's a platform for sharing projects they are proud of and search for interesting projects "
+                                       "of all kinds across all subjects to promote more personalized learning.",
+                             proj_link="http://127.0.0.1:5000/",
+                             creator=user3 #user.id
+                             )
+    db.session.add(project3)
+
 
     # Save to DB
     db.session.commit()
