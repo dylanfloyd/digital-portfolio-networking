@@ -20,7 +20,7 @@ class Project(db.Model):
     date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     num_favorites = db.Column(db.Integer, nullable=False, default=0)
-    proj_tags = db.Column(db.String(1000), nullable=False, default="#Project #Tags")
+    proj_tags = db.Column(db.String(1000), nullable=True, default="#Project #Tags")
 
     # Relationships:
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))

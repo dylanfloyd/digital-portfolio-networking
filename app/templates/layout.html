@@ -58,8 +58,7 @@
 
 
                 {% if current_user.is_authenticated %}
-                    <a href="https://www.google.com" class="text-white">Google</a>
-                    &nbsp; | &nbsp;
+{#                    <a href="{{ url_for('main.user_profile_page') }}" class="text-white">{{ current_user.first_name or current_user.username or current_user.email }}'s User Profile Page</a>#}
                     <a href="/main/portfolio" class="text-white">Portfolio</a>
                     &nbsp; | &nbsp;
                     <a href="/main/favorites" class="text-white">Favorites</a>

@@ -38,6 +38,10 @@ def admin_page():
 @main_blueprint.route('/main/user_profile_page.html', methods=['GET', 'POST'])
 @login_required
 def user_profile_page():
+    if request.method == 'GET':
+        proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
+
+
     # Initialize form
     form = UserProfileForm(request.form, obj=current_user)
 
@@ -53,15 +57,14 @@ def user_profile_page():
         return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/user_profile_page.html', form=form)
+    return render_template('main/user_profile_page.html', current_user=current_user, project=proj_search_result, form=form)
 
 
 @main_blueprint.route('/main/portfolio', methods=['GET', 'POST'])
 @login_required
 def user_portfolio_page():
     if request.method == 'GET':
-        proj_search_result = Project.query.filter(Project.id == 1).first()
-        result_title = proj_search_result.proj_title
+        proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
 
 
     # # Initialize form
@@ -79,7 +82,7 @@ def user_portfolio_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/portfolio.html', value=result_title)  #, form=form)
+    return render_template('main/portfolio.html', current_user=current_user, project=proj_search_result)  #, form=form)
 
 
 @main_blueprint.route('/main/favorites', methods=['GET', 'POST'])
@@ -221,13 +224,20 @@ def edit_project_page():
     # Process valid POST
     if request.method == 'POST' and previous_proj_form.validate():
         # Copy form fields to user_profile fields
-        proj_search_result.data = dict(
-            proj_title=request.form['title'],
-            proj_desc=request.form['desc'],
-            proj_link=request.form['url'],
-            proj_tags=request.form['tags']
-        )
+        # proj_search_result.data = dict(
+        #     proj_title=request.form['title'],
+        #     proj_desc=request.form['desc'],
+        #     proj_link=request.form['url'],
+        #     proj_tags=request.form['tags']
+        # )
         # form.populate_obj(current_user)
+
+        #Update project in database:
+        proj_search_result.proj_title = request.form['title']
+        proj_search_result.proj_desc = request.form['desc']
+        proj_search_result.proj_link = request.form['url']
+        proj_search_result.proj_tags = request.form['tags']
+
 
         # Save user_profile
         db.session.commit()

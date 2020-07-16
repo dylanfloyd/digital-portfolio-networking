@@ -53,9 +53,19 @@ def create_users():
     # user = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd@example.com', 'apwd')
 
     # Add dummy projects
-    project = create_project(proj_title='Insignia-Prototype',
-                             proj_desc='This description is a placeholder for the Insignia-Prototype project.',
+    project = create_project(proj_title='Insignia-Prototype 1',
+                             proj_desc='This first description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.google.com",
+                             cur_user=1 #user.id
+                             )
+    project = create_project(proj_title='Insignia-Prototype 2',
+                             proj_desc='This second description is a placeholder for the Insignia-Prototype project.',
+                             proj_link="https://www.facebook.com",
+                             cur_user=1 #user.id
+                             )
+    project = create_project(proj_title='Insignia-Prototype 3',
+                             proj_desc='This third description is a placeholder for the Insignia-Prototype project.',
+                             proj_link="https://www.twitter.com",
                              cur_user=1 #user.id
                              )
 
