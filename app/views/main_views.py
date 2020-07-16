@@ -199,15 +199,15 @@ def settings_page():
 
 
 # @project_blueprint.route('/project/edit_project', methods=['GET', 'POST'])
-@main_blueprint.route('/main/edit_project', methods=['GET', 'POST'])
+@main_blueprint.route('/main/edit_project/<int:proj_id>', methods=['GET', 'POST'])
 @login_required
-def edit_project_page():
+def edit_project_page(proj_id):
     # Initialize form
     #TODO: Remove ex_proj later. Only for demonstration in Milestone 2
 
-    proj_search_result = Project.query.filter(Project.id == request.proj_id).first() #should only ever be one b/c unique
-    # print(proj_search_result)
-    # print("proj_search_result found!!!")
+    proj_search_result = Project.query.filter(Project.id == proj_id).first() #should only ever be one b/c unique
+    proj_creator = proj_search_result.creator
+    # if proj_creator == current_user:
     previous_proj_form = EditProjectForm(
         title=proj_search_result.proj_title,
         url=proj_search_result.proj_link,
@@ -240,22 +240,9 @@ def edit_project_page():
         # Redirect to home page
         return redirect(url_for('main.user_portfolio_page'))
 
-    # else:
-    #     form = EditProjectForm(request.form)
-    #     # form.title = ex_proj.proj_title
-    #     # form.url = ex_proj.proj_link
-    #     # form.desc = ex_proj.proj_desc
-    #     # form.tags = ex_proj.proj_tags
-    #     form.proj_title = "Example Project Title"
-    #     form.proj_link = "https://www.google.com"
-    #     form.proj_desc = "This example description says that clicking the link will send the user to google"
-    #     form.proj_tags = "#These #Are #Some #Example #ProjectTags #That #Can #B #Used #To #HelpUsersFindYourWork"
-    #     db.session.commit()
 
     # Process GET or invalid POST
     return render_template('main/edit_project_page.html', form=previous_proj_form) #form)
-    # return render_template('main/edit_project_page.html', form=form)
-    # return render_template('main/../templates/flask_user/edit_project_page.html', form=form)
 
 
 @main_blueprint.route('/main/create_project', methods=['GET', 'POST'])

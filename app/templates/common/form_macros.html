@@ -80,9 +80,8 @@
                     <a href="#" class="btn" style="padding: 0"><3</a>
                 </div>
             </div>
-{#            <a href="/main/edit_project" class="btn text-white bg-dark">Edit Project</a>#}
-           <button type="submit" name="edit_button" method="POST" formaction="/main/edit_project.html" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</button>
-{#           <input type="submit" name="edit_btn_id" value="Edit Project" class="btn text-white bg-dark">{{ project.id }}#}
+           <a type="button" name="edit_button" method="POST" href="/main/edit_project/{{ project.id }}" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</a>
+{#           <button type="submit" name="edit_button" method="POST" formaction="/main/edit_project.html" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</button>#}
 
 
         </div>
