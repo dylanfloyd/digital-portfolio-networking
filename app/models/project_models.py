@@ -18,12 +18,12 @@ class Project(db.Model):
     proj_desc = db.Column(db.String(255), nullable=False)
     proj_link = db.Column(db.String(1000), nullable=False, default="https://www.google.com")
     date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    # date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     num_favorites = db.Column(db.Integer, nullable=False, default=0)
     proj_tags = db.Column(db.String(1000), nullable=True, default="#Project #Tags")
 
     # Relationships:
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+    # creator_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    creator_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
 
 
 

@@ -46,28 +46,43 @@ def create_users():
 
     # Adding roles
     admin_role = find_or_create_role('admin', u'Admin')
+    db.session.add(admin_role)
+    db.session.commit()
 
     # Add users
-    user = find_or_create_user(u'Admin', u'Example', u'admin@example.com', 'Password1', admin_role)
-    user = find_or_create_user(u'Member', u'Example', u'member@example.com', 'Password1')
-    # user = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd@example.com', 'apwd')
+    user1 = find_or_create_user(u'Admin', u'Example', u'admin@example.com', 'Password1', admin_role)
+    db.session.add(user1)
+    db.session.commit()
+
+    user2 = find_or_create_user(u'Member', u'Example', u'member@example.com', 'Password1')
+    db.session.add(user2)
+    db.session.commit()
+
 
     # Add dummy projects
-    project = create_project(proj_title='Insignia-Prototype 1',
+    project1 = create_project(proj_title='Insignia-Prototype 1',
                              proj_desc='This first description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.google.com",
-                             cur_user=1 #user.id
+                             creator=user2 #user.id
                              )
-    project = create_project(proj_title='Insignia-Prototype 2',
+    db.session.add(project1)
+    db.session.commit()
+
+
+    project2 = create_project(proj_title='Insignia-Prototype 2',
                              proj_desc='This second description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.facebook.com",
-                             cur_user=1 #user.id
+                             creator=user2 #user.id
                              )
-    project = create_project(proj_title='Insignia-Prototype 3',
+    db.session.add(project2)
+    db.session.commit()
+
+    project3 = create_project(proj_title='Insignia-Prototype 3',
                              proj_desc='This third description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.twitter.com",
-                             cur_user=1 #user.id
+                             creator=user2 #user.id
                              )
+    db.session.add(project3)
 
     # Save to DB
     db.session.commit()
@@ -97,14 +112,14 @@ def find_or_create_user(first_name, last_name, email, password, role=None):
         db.session.add(user)
     return user
 
-def create_project(proj_title, proj_desc, proj_link, cur_user):
+def create_project(proj_title, proj_desc, proj_link, creator):
     """ Create new project """
     project = Project(proj_title=proj_title,
                       proj_desc=proj_desc,
                       proj_link=proj_link,
-                      user_id=cur_user,
                       date_added=datetime.datetime.today(),
-                      num_favorites=0
+                      num_favorites=0,
+                      creator=creator
                       )
     db.session.add(project)
     return project

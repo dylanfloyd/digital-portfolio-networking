@@ -7,6 +7,7 @@ from flask_user.forms import RegisterForm
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators
 from app import db
+from app.models.project_models import Project
 
 
 # Define the User data model. Make sure to add the flask_user.UserMixin !!
@@ -30,7 +31,7 @@ class User(db.Model, UserMixin):
     # Relationships
     roles = db.relationship('Role', secondary='users_roles',
                             backref=db.backref('users', lazy='dynamic'))
-    projects = db.relationship('Project', backref=db.backref('project', lazy=True))
+    projects = db.relationship('Project', backref=db.backref('creator', lazy=True))
 
 
 # Define the Role data model
