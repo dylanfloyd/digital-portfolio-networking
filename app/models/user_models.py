@@ -5,9 +5,11 @@
 from flask_user import UserMixin
 from flask_user.forms import RegisterForm
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, validators
+from wtforms import StringField, SubmitField, validators, TextAreaField
 from app import db
 from app.models.project_models import Project
+from wtforms.validators import DataRequired, Length, Email, URL
+
 
 
 # Define the User data model. Make sure to add the flask_user.UserMixin !!
@@ -27,7 +29,7 @@ class User(db.Model, UserMixin):
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
     first_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
     last_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
-    # bio = db.Column(db.Unicode(500), nullable=True, server_default=u'')
+    bio = db.Column(db.Unicode(500), nullable=True, server_default=u'')
 
     # Relationships
     roles = db.relationship('Role', secondary='users_roles',
@@ -63,11 +65,10 @@ class MyRegisterForm(RegisterForm):
 # Define the User profile form
 class UserProfileForm(FlaskForm):
 
-    user_bio = StringField('Bio', validators=[
-        validators.DataRequired('User biography is required.')
-    ])
+
     first_name = StringField('First name', validators=[
         validators.DataRequired('First name is required')])
     last_name = StringField('Last name', validators=[
         validators.DataRequired('Last name is required')])
+    bio = TextAreaField('Bio')
     submit = SubmitField('Save')

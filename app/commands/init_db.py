@@ -39,7 +39,7 @@ def init_db():
 
 def create_users():
     """ Create users """
-
+    generic_bio = "                About me section describing whatever the user wants to describe for their public profile. Example: OMSCS Grad student at Georgia Tech. Currently prototyping this application which you are examining. Words phrases sentences, etc. Words phrases sentences, etc. Words phrases sentences, etc. Words phrases sentences, etc. Words phrases sentences, etc..."
     # Create all tables
     db.create_all()
     db.session.commit()
@@ -50,15 +50,31 @@ def create_users():
     db.session.commit()
 
     # Add users
-    user1 = find_or_create_user(u'Admin', u'Example', u'administr8or', u'admin@example.com', 'Password1', admin_role)
+    user1 = find_or_create_user(u'Admin',
+                                u'Example',
+                                u'administr8or',
+                                u'admin@example.com',
+                                'Password1',
+                                admin_role,
+                                u'This is the administrators bio. We run things around here')
     db.session.add(user1)
     db.session.commit()
 
-    user2 = find_or_create_user(u'Member', u'Example', u'youser_demo', u'member@example.com', 'Password1')
+    user2 = find_or_create_user(u'Member',
+                                u'Example',
+                                u'youser_demo',
+                                u'member@example.com',
+                                'Password1',
+                                bio=generic_bio)
     db.session.add(user2)
     db.session.commit()
 
-    user3 = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd', u'dfloyd7@gatech.edu', 'Password1')
+    user3 = find_or_create_user(u'Dylan',
+                                u'Floyd',
+                                u'dylanfloyd',
+                                u'dfloyd7@gatech.edu',
+                                'Password1',
+                                bio=generic_bio)
     db.session.add(user2)
     db.session.commit()
 
@@ -114,7 +130,7 @@ def find_or_create_role(name, label):
     return role
 
 
-def find_or_create_user(first_name, last_name, username, email, password, role=None):
+def find_or_create_user(first_name, last_name, username, email, password, role=None, bio=''):
     """ Find existing user or create new user """
     user = User.query.filter(User.email == email).first()
     if not user:
@@ -127,6 +143,8 @@ def find_or_create_user(first_name, last_name, username, email, password, role=N
                     email_confirmed_at=datetime.datetime.utcnow())
         if role:
             user.roles.append(role)
+        if bio:
+            user.bio=bio
         db.session.add(user)
     return user
 

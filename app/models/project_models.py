@@ -71,35 +71,3 @@ class NewProjectForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-# # Define the Role data model
-# class Role(db.Model):
-#     __tablename__ = 'roles'
-#     id = db.Column(db.Integer(), primary_key=True)
-#     name = db.Column(db.String(50), nullable=False, server_default=u'', unique=True)  # for @roles_accepted()
-#     label = db.Column(db.Unicode(255), server_default=u'')  # for display purposes
-#
-#
-# # Define the UserRoles association model
-# class UsersRoles(db.Model):
-#     __tablename__ = 'users_roles'
-#     id = db.Column(db.Integer(), primary_key=True)
-#     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
-#     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
-#
-#
-# # # Define the User registration form
-# # # It augments the Flask-User RegisterForm with additional fields
-# # class MyRegisterForm(RegisterForm):
-# #     first_name = StringField('First name', validators=[
-# #         validators.DataRequired('First name is required')])
-# #     last_name = StringField('Last name', validators=[
-# #         validators.DataRequired('Last name is required')])
-#
-#
-# # Define the User profile form
-# class UserProfileForm(FlaskForm):
-#     first_name = StringField('First name', validators=[
-#         validators.DataRequired('First name is required')])
-#     last_name = StringField('Last name', validators=[
-#         validators.DataRequired('Last name is required')])
-#     submit = SubmitField('Save')
