@@ -110,6 +110,7 @@ def favorites_page():
 
 @main_blueprint.route('/main/trending', methods=['GET', 'POST'])
 def trending_page():
+    projects = Project.query.all()
     # # Initialize form
     # form = UserProfileForm(request.form, obj=current_user)
     #
@@ -125,7 +126,7 @@ def trending_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/trending.html')  #, form=form)
+    return render_template('main/trending.html', projects=projects)  #, form=form)
 
 
 @main_blueprint.route('/main/specialize', methods=['GET', 'POST'])
