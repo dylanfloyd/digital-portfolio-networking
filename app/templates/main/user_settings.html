@@ -19,6 +19,8 @@
 
     {{ render_submit_field(form.submit, tabindex=280) }}
 
+    <p class="mt-2"><a href="{{ url_for('user.change_username') }}">Change username</a></p>
+
     <p class="mt-2"><a href="{{ url_for('user.change_password') }}">Change password</a></p>
 
     </div>

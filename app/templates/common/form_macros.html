@@ -71,12 +71,12 @@
             <div class="card-footer mt-1 mb-1" style="padding: 0">
                 <div class="pull-left ml-3">
                     <a href="#" target="_blank" class="btn" style="padding: 0">
-                        {{ current_user.email }}
+                        {{ current_user.username }}
 {#                        @username#}
                     </a>
                 </div>
                 <div class="pull-right mr-3">
-                    <small class="text-muted">1.1k</small>
+                    <small class="text-muted">{{ project.num_favorites }}</small>
                     <a href="#" class="btn" style="padding: 0"><3</a>
                 </div>
             </div>

@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.Unicode(255), nullable=False, server_default=u'', unique=True)
     email_confirmed_at = db.Column(db.DateTime())
     password = db.Column(db.String(255), nullable=False, server_default='')
+    username = db.Column(db.String(50), nullable=False, unique= True)
     # reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
     active = db.Column(db.Boolean(), nullable=False, server_default='0')
 
