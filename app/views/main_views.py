@@ -35,29 +35,20 @@ def admin_page():
     return render_template('main/admin_page.html')
 
 
-@main_blueprint.route('/main/user_profile_page.html', methods=['GET', 'POST'])
+@main_blueprint.route('/main/user_profile_page', methods=['GET', 'POST'])
 @login_required
 def user_profile_page():
     if request.method == 'GET':
-        proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
+        projects = current_user.projects
+        # print(projects)
+        # proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
 
+    form = request.form
+    if request.method =='POST':
+        proj_id = form.get('edit_button')
+        return render_template('/main/edit_project.html', proj_id=proj_id)
 
-    # Initialize form
-    form = UserProfileForm(request.form, obj=current_user)
-
-    # Process valid POST
-    if request.method == 'POST' and form.validate():
-        # Copy form fields to user_profile fields
-        form.populate_obj(current_user)
-
-        # Save user_profile
-        db.session.commit()
-
-        # Redirect to home page
-        return redirect(url_for('main.home_page'))
-
-    # Process GET or invalid POST
-    return render_template('main/user_profile_page.html', current_user=current_user, project=proj_search_result, form=form)
+    return render_template('main/user_profile_page.html', current_user=current_user, projects=projects)
 
 
 @main_blueprint.route('/main/portfolio', methods=['GET', 'POST'])
@@ -88,7 +79,7 @@ def user_portfolio_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/portfolio.html', current_user=current_user, projects=projects)  #, form=form)
+    return render_template('main/user_profile_page.html', current_user=current_user, projects=projects)  #, form=form)
 
 
 @main_blueprint.route('/main/favorites', methods=['GET', 'POST'])
@@ -191,7 +182,7 @@ def settings_page():
         db.session.commit()
 
         # Redirect to home page
-        return redirect(url_for('main.user_portfolio_page'))
+        return redirect(url_for('main.user_profile_page'))
 
     # Process GET or invalid POST
     return render_template('main/user_settings.html', form=form)
@@ -239,7 +230,7 @@ def edit_project_page(proj_id):
             db.session.commit()
 
             # Redirect to home page
-            return redirect(url_for('main.user_portfolio_page'))
+            return redirect(url_for('main.user_profile_page'))
 
 
         # Process GET or invalid POST
@@ -280,35 +271,35 @@ def create_project():
 
 
         # Redirect to home page
-        return redirect(url_for('main.user_portfolio_page'))
+        return redirect(url_for('main.user_profile_page'))
         # return redirect('main/create_project=success', form=form)
 
     return render_template('main/create_project.html', form=form)
 
 
 
-@main_blueprint.route('/main/create_project=success', methods=['POST'])
-# @main_blueprint.route('/main/create_project/post_project', methods=['POST'])
-@login_required
-def post_project():
-
-    # # form = NewProjectForm()
-    # # if form.validate_on_submit():
-    # #     return redirect(url_for('success'))
-    # # return render_template('index.html', form=form)
-    # project = NewProjectForm(
-    #     request.form['title'],
-    #     request.form['url'],
-    #     request.form['desc']
-    # )
-    project = NewProjectForm(
-        request.form['title'],
-        request.form['url'],
-        request.form['desc']
-    )
-
-    db.session.add(project)
-    db.session.commit()
-
-    return redirect('main/portfolio.html')
+# @main_blueprint.route('/main/create_project=success', methods=['POST'])
+# # @main_blueprint.route('/main/create_project/post_project', methods=['POST'])
+# @login_required
+# def post_project():
+#
+#     # # form = NewProjectForm()
+#     # # if form.validate_on_submit():
+#     # #     return redirect(url_for('success'))
+#     # # return render_template('index.html', form=form)
+#     # project = NewProjectForm(
+#     #     request.form['title'],
+#     #     request.form['url'],
+#     #     request.form['desc']
+#     # )
+#     project = NewProjectForm(
+#         request.form['title'],
+#         request.form['url'],
+#         request.form['desc']
+#     )
+#
+#     db.session.add(project)
+#     db.session.commit()
+#
+#     return redirect('main/portfolio.html')
 
