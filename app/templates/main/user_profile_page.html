@@ -3,7 +3,7 @@
 {% block content %}
 
 {#    {{% user_projects=select * from  }}#}
-    {% from "common/form_macros.html" import render_card %}
+    {% from "common/form_macros.html" import render_user_card %}
 
 {#    <h1 style="text-align: center">Portfolio</h1>#}
 {#    <p>Profile Button: First Last</p>#}
@@ -33,7 +33,7 @@
                 <p class="mb-0">@{{ current_user.username }} | {{ current_user.email }}</p>
             </div>
             <div class="pull-right mr-3">
-                <a href="#" class="btn text-white bg-dark" style="padding: 0"> + Follow</a>
+                <a href="{{ url_for('main.create_project') }}" class="btn text-white bg-dark" style="padding: 0"> + Add Project</a>
             </div>
         </div>
     </div>
@@ -114,7 +114,7 @@
 
 
         {% for project in projects %}
-            {{ render_card(project, current_user) }}
+            {{ render_user_card(project, current_user) }}
         {% endfor %}
     </div>
 

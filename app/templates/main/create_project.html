@@ -1,21 +1,47 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="card mt-3 bg-dark">
-    <div class="formwrapper">
-      <h2 class="title">New Project</h2>
-      <form method="POST" action="/main/create_project">{{ form.csrf_token }}
+    {% from "common/form_macros.html" import render_field, render_submit_field %}
+
+    <div class="card mt-3 bg-dark">
+        <div class="container col-centered">
+            <h2 class="text-white">{%trans%}New Project{%endtrans%}</h2>
+
+            <form action="" method="POST" class="form text-white" role="form">
+                {{ form.hidden_tag() }}
+                {{ render_field(form.title, tabindex=10) }}
+                {{ render_field(form.url, tabindex=20) }}
+            {#    {% if user_manager.USER_REQUIRE_RETYPE_PASSWORD %}#}
+            {#        {{ render_field(form.retype_password, tabindex=30) }}#}
+            {#    {% endif %}#}
+                {{ render_field(form.desc, tabindex=90, style="min-height: 100px") }}
+    {#            {{ render_field(form.desc, tabindex=90) }}#}
+
+                {{ render_field(form.tags, tabindex=90) }}
+                {{ render_submit_field(form.submit) }}
+
+            </form>
+    {#            {{ form.submit }}#}
+    {#        {{ render_submit_field(form.submit) }}#}
+        </div>
+    </div>
+
+
+{#<div class="card mt-3 bg-dark">#}
+{#    <div class="formwrapper">#}
+{#      <h2 class="title">New Project</h2>#}
+{#      <form method="POST" action="/main/create_project">{{ form.csrf_token }}#}
 {#      <form method="POST" action="/main/create_project/post_project">#}
 {#      <form method="POST" action="{{ url_for('main.post_project') }}" role="form">#}
-          <div class="container col-centered">
-              <div class="form-control" type="text">{{ form.title.label }} {{ form.title(size=20) }}</div>
-              <div class="form-control" type="text">{{ form.url.label }} {{ form.url }}</div>
-              <div class="form-control" type="text">{{ form.desc.label }} {{ form.desc }}</div>
-              <div class="form-control" type="text">{{ form.tags.label }} {{ form.tags }}</div>
-
-              {{ form.submit }}
-          </div>
-      </form>
-    </div>
-</div>
+{#          <div class="container col-centered">#}
+{#              <div class="form-control" type="text">{{ form.title.label }} {{ form.title(size=20) }}</div>#}
+{#              <div class="form-control" type="text">{{ form.url.label }} {{ form.url }}</div>#}
+{#              <div class="form-control" type="text">{{ form.desc.label }} {{ form.desc }}</div>#}
+{#              <div class="form-control" type="text">{{ form.tags.label }} {{ form.tags }}</div>#}
+{##}
+{#              {{ form.submit }}#}
+{#          </div>#}
+{#      </form>#}
+{#    </div>#}
+{#</div>#}
 {% endblock %}

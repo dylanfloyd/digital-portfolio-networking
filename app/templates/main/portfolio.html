@@ -16,21 +16,21 @@
 
     <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%; min-height: 10rem">
         <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
-            <h5 class="card-title ml-3 mr-3 mb-1 text-center">{{ current_user.first_name.upper() }} {{ current_user.last_name.upper() }}'S PORTFOLIO</h5>
+            <h5 class="card-title ml-3 mr-3 mb-1 text-center">{{ user.first_name.upper() }} {{ user.last_name.upper() }}'S PORTFOLIO</h5>
         </div>
 
         <div class="card-body" style="padding: 0">
-            <p class="card-text ml-4 mr-4 text-center" style="white-space: pre-wrap">{{ current_user.bio }}</p>
+            <p class="card-text ml-4 mr-4 text-center" style="white-space: pre-wrap">{{ user.bio }}</p>
         </div>
         <div class="card-footer mt-1 mb-1" style="padding: 0">
 {#            <div class="pull-left ml-3">#}
-{#                <p class="pull-left">| {{ current_user.email }}</p>#}
+{#                <p class="pull-left">| {{ user.email }}</p>#}
 {#                <a href="https://www.google.com" target="_blank" class="btn btn text-white bg-dark" style="padding: 0">#}
-{#                    @{{ current_user.username }}#}
+{#                    @{{ user.username }}#}
 {#                </a>#}
 {#            </div>#}
             <div class="pull-left ml-3 mb-0 text-center">
-                <p class="mb-0">@{{ current_user.username }} | {{ current_user.email }}</p>
+                <p class="mb-0">@{{ user.username }} | {{ user.email }}</p>
             </div>
             <div class="pull-right mr-3">
                 <a href="#" class="btn text-white bg-dark" style="padding: 0"> + Follow</a>
@@ -114,10 +114,9 @@
 
 
         {% for project in projects %}
-            {{ render_card(project, current_user) }}
+            {{ render_card(project, user) }}
         {% endfor %}
     </div>
-
 
 
 {% endblock %}

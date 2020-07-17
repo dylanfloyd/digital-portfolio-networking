@@ -8,7 +8,7 @@ from flask import request, url_for
 from flask_user import current_user, login_required, roles_required, current_app
 
 from app import db
-from app.models.user_models import UserProfileForm
+from app.models.user_models import UserProfileForm, User, UsersRoles
 from app.models.project_models import EditProjectForm, NewProjectForm, Project
 # from forms import NewProjectForm
 
@@ -51,11 +51,14 @@ def user_profile_page():
     return render_template('main/user_profile_page.html', current_user=current_user, projects=projects)
 
 
-@main_blueprint.route('/main/portfolio', methods=['GET', 'POST'])
+@main_blueprint.route('/main/portfolio/<username>', methods=['GET', 'POST'])
 @login_required
-def user_portfolio_page():
+def portfolio_page(username):
+
     if request.method == 'GET':
-        projects = current_user.projects
+        user = User.query.filter(User.username == username).first()
+        projects = user.projects
+
         # print(projects)
         # proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
 
@@ -79,7 +82,7 @@ def user_portfolio_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/user_profile_page.html', current_user=current_user, projects=projects)  #, form=form)
+    return render_template('main/portfolio.html', user=user, projects=projects)  #, form=form)
 
 
 @main_blueprint.route('/main/favorites', methods=['GET', 'POST'])

@@ -63,7 +63,7 @@ class NewProjectForm(FlaskForm):
     url = StringField('Project Link', [
         DataRequired(),
         URL(message=('Not a valid web address.'))])
-    desc = StringField('Project Desc.', [
+    desc = TextAreaField('Project Desc.', [
         DataRequired(),
         Length(min=4, message=('Your message is too short.'))])
     tags = StringField('#Specialization #Tags')
