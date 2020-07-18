@@ -1,3 +1,6 @@
+
+
+
 {% macro render_field(field, label=None, label_visible=true, right_url=None, right_label=None) -%}
     <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
         {% if field.type != 'HiddenField' and label_visible %}
@@ -12,7 +15,9 @@
         {% endif %}
     </div>
 {%- endmacro %}
- 
+
+
+
 {% macro render_checkbox_field(field, label=None) -%}
     {% if not label %}{% set label=field.label.text %}{% endif %}
     <div class="checkbox">
@@ -21,7 +26,9 @@
         </label>
     </div>
 {%- endmacro %}
- 
+
+
+
 {% macro render_radio_field(field) -%}
     {% for value, label, checked in field.iter_choices() %}
         <div class="radio">
@@ -33,10 +40,110 @@
     {% endfor %}
 {%- endmacro %}
 
+
+
 {% macro render_submit_field(field, label=None, tabindex=None) -%}
     {% if not label %}{% set label=field.label.text %}{% endif %}
     {#<button type="submit" class="form-control btn btn-default btn-primary">{{label}}</button>#}
-    <input type="submit" value="{{label}}"
+    <input type="submit" class="text-dark pull-right" value="{{label}}"
+{#           {% if style  %} style="{{ styleinfo }}"#}
            {% if tabindex %}tabindex="{{ tabindex }}"{% endif %}
            >
 {%- endmacro %}
+
+
+{% macro render_user_card(project, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
+       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
+            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
+                <small class="text-muted pull-left ml-3">Project-Type</small>
+                <small class="text-muted pull-right mr-3">{{ project.date_added.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <div class="card-body" style="padding: 0">
+                <h5 class="card-title ml-3 mr-3">
+                    <a href="{{ project.proj_link }}" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>
+                    {#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>#}
+                {#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Short Proj. Title Button</a>#}
+                </h5>
+
+                <p class="card-text ml-4 mr-4">{{ project.proj_desc }}</p>
+{#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
+            </div>
+            <div class="card-footer mt-1 mb-1" style="padding: 0">
+                <div class="pull-left ml-3">
+                    <a href="/main/portfolio/{{ current_user.username }}" target="_blank" class="btn" style="padding: 0">
+                        {{ current_user.username }}
+{#                        @username#}
+                    </a>
+                </div>
+                <div class="pull-right mr-3">
+                    <small class="text-muted">{{ project.num_favorites }}</small>
+                    <a href="#" class="btn" style="padding: 0"><3</a>
+                </div>
+            </div>
+           <a type="button" name="edit_button" method="POST" href="/main/edit_project/{{ project.id }}" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</a>
+{#           <button type="submit" name="edit_button" method="POST" formaction="/main/edit_project.html" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</button>#}
+
+
+        </div>
+{%- endmacro %}
+
+
+
+{% macro render_card(project, user, label=None, label_visible=true, right_url=None, right_label=None) -%}
+       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
+            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
+                <small class="text-muted pull-left ml-3">Project-Type</small>
+                <small class="text-muted pull-right mr-3">{{ project.date_added.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <div class="card-body" style="padding: 0">
+                <h5 class="card-title ml-3 mr-3">
+                    <a href="{{ project.proj_link }}" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>
+                </h5>
+
+                <p class="card-text ml-4 mr-4">{{ project.proj_desc }}</p>
+            </div>
+            <div class="card-footer mt-1 mb-1" style="padding: 0">
+                <div class="pull-left ml-3">
+                    <a href="/main/portfolio/{{ user.username }}" target="_blank" class="btn" style="padding: 0">
+                        {{ user.username }}
+                    </a>
+                </div>
+                <div class="pull-right mr-3">
+                    <small class="text-muted">{{ project.num_favorites }}</small>
+                    <a href="#" class="btn" style="padding: 0"><3</a>
+                </div>
+            </div>
+
+
+        </div>
+{%- endmacro %}
+
+
+
+
+{#       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">#}
+{#            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">#}
+{#                <small class="text-muted pull-left ml-3">Project-Type</small>#}
+{#                <small class="text-muted pull-right mr-3">Date-Added</small>#}
+{#            </div>#}
+{#            <div class="card-body" style="padding: 0">#}
+{#                <h5 class="card-title ml-3 mr-3">#}
+{#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ value }}</a>#}
+                {#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Short Proj. Title Button</a>#}
+{#                </h5>#}
+{##}
+{#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
+{#            </div>#}
+{#            <div class="card-footer mt-1 mb-1" style="padding: 0">#}
+{#                <div class="pull-left ml-3">#}
+{#                    <a href="#" target="_blank" class="btn" style="padding: 0">#}
+{#                        @username#}
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="pull-right mr-3">#}
+{#                    <small class="text-muted">1.1k</small>#}
+{#                    <a href="#" class="btn" style="padding: 0"><3</a>#}
+{#                </div>#}
+{#            </div>#}
+{#            <a href="/main/edit_project" class="btn text-white bg-dark">Edit Project</a>#}
+{#        </div>#}
