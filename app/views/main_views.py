@@ -9,7 +9,7 @@ from flask_user import current_user, login_required, roles_required, current_app
 
 from app import db
 from app.models.user_models import UserProfileForm, User, UsersRoles
-from app.models.project_models import EditProjectForm, NewProjectForm, Project
+from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike
 # from forms import NewProjectForm
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
@@ -82,12 +82,21 @@ def portfolio_page(username):
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/portfolio.html', user=user, projects=projects)  #, form=form)
+    return render_template('main/portfolio.html', current_user=current_user, user=user, projects=projects)  #, form=form)
 
 
 @main_blueprint.route('/main/favorites', methods=['GET', 'POST'])
 @login_required
 def favorites_page():
+    #TODO: Must be a more efficient way to query at scale and get projs and avoid for loop.
+    projects = Project.query.all()
+    fav_projects = Project.query.filter(ProjectLike.user_id == current_user.id).all()
+    fav_projects = []
+    for proj in projects:
+        if current_user.has_liked_project(proj):
+            fav_projects.append(proj)
+
+
     # # Initialize form
     # form = UserProfileForm(request.form, obj=current_user)
     #
@@ -103,13 +112,14 @@ def favorites_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/favorites.html')  #, form=form)
+    return render_template('main/favorites.html', current_user=current_user, projects=fav_projects)  #, form=form)
 
 
 
 
 @main_blueprint.route('/main/trending', methods=['GET', 'POST'])
 def trending_page():
+    ##TODO: Add an if statement to check if anyone is logged in or not. Need a new render card for user not logged in.
     projects = Project.query.all()
     # # Initialize form
     # form = UserProfileForm(request.form, obj=current_user)
@@ -126,7 +136,7 @@ def trending_page():
     #     return redirect(url_for('main.home_page'))
 
     # Process GET or invalid POST
-    return render_template('main/trending.html', projects=projects)  #, form=form)
+    return render_template('main/trending.html', current_user=current_user, projects=projects)  #, form=form)
 
 
 @main_blueprint.route('/main/specialize', methods=['GET', 'POST'])
@@ -187,8 +197,11 @@ def settings_page():
 
         # Redirect to home page
         return redirect(url_for('main.user_profile_page'))
+        # return redirect(request.referrer.referrer)
 
-    # Process GET or invalid POST
+    #TODO:  invalid POST
+
+    # Process GET
     return render_template('main/user_settings.html', form=form)
 
 
@@ -307,3 +320,14 @@ def create_project():
 #
 #     return redirect('main/portfolio.html')
 
+@main_blueprint.route('/favorite/<int:project_id>/<action>')
+@login_required
+def favorite_action(project_id, action):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if action == 'favorite':
+        current_user.like_project(project)
+        db.session.commit()
+    if action == 'unfavorite':
+        current_user.unlike_project(project)
+        db.session.commit()
+    return redirect(request.referrer)

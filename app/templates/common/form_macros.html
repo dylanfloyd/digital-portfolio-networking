@@ -89,11 +89,11 @@
 
 
 
-{% macro render_card(project, user, label=None, label_visible=true, right_url=None, right_label=None) -%}
+{% macro render_card(project, user, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
        <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
             <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
-                <small class="text-muted pull-left ml-3">Project-Type</small>
-                <small class="text-muted pull-right mr-3">{{ project.date_added.strftime('%Y-%m-%d') }}</small>
+                <small class="text-muted pull-left ml-3">{{ project.likes.count() }} favorites</small>
+                <small class="text-muted pull-right mr-3">Posted: {{ project.date_added.strftime('%Y-%m-%d') }}</small>
             </div>
             <div class="card-body" style="padding: 0">
                 <h5 class="card-title ml-3 mr-3">
@@ -109,8 +109,13 @@
                     </a>
                 </div>
                 <div class="pull-right mr-3">
-                    <small class="text-muted">{{ project.num_favorites }}</small>
-                    <a href="#" class="btn" style="padding: 0"><3</a>
+{#                    <small class="text-muted">{{ project.num_favorites }}</small>#}
+                      {% if current_user.has_liked_project(project) %}
+                        <a href="{{ url_for('main.favorite_action', project_id=project.id, action='unfavorite') }}" class="btn" style="padding: 0">Unfavorite</a>
+                      {% else %}
+                        <a href="{{ url_for('main.favorite_action', project_id=project.id, action='favorite') }}" class="btn" style="padding: 0">+ Favorite</a>
+                      {% endif %}
+{#                    <a href="#" class="btn" style="padding: 0"><3</a>#}
                 </div>
             </div>
 

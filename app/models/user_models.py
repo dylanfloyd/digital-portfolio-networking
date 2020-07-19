@@ -7,7 +7,7 @@ from flask_user.forms import RegisterForm
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, TextAreaField
 from app import db
-from app.models.project_models import Project
+from app.models.project_models import Project, ProjectLike
 from wtforms.validators import DataRequired, Length, Email, URL
 
 
@@ -30,12 +30,32 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
     last_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
     bio = db.Column(db.Unicode(500), nullable=True, server_default=u'')
+    interests = db.Column(db.Unicode(500), nullable=False, server_default='#Education #Technology #GT #OMSCS')
 
     # Relationships
     roles = db.relationship('Role', secondary='users_roles',
                             backref=db.backref('users', lazy='dynamic'))
     projects = db.relationship('Project', backref=db.backref('creator', lazy=True))
+    liked = db.relationship(
+        'ProjectLike',
+        foreign_keys='ProjectLike.user_id',
+        backref='user', lazy='dynamic')
 
+    def like_project(self, project):
+        if not self.has_liked_project(project):
+            like = ProjectLike(user_id=self.id, project_id=project.id)
+            db.session.add(like)
+
+    def unlike_project(self, project):
+        if self.has_liked_project(project):
+            ProjectLike.query.filter_by(
+                user_id=self.id,
+                project_id=project.id).delete()
+
+    def has_liked_project(self, project):
+        return ProjectLike.query.filter(
+            ProjectLike.user_id == self.id,
+            ProjectLike.project_id == project.id).count() > 0
 
 # Define the Role data model
 class Role(db.Model):
@@ -71,4 +91,7 @@ class UserProfileForm(FlaskForm):
     last_name = StringField('Last name', validators=[
         validators.DataRequired('Last name is required')])
     bio = TextAreaField('Bio')
+    interests = TextAreaField('#SpecializationInterests: ', validators=[
+        DataRequired('Please enter at least one topic you are interested in. Dont forget to separate with spaces and start each interest with a # sign.')
+    ])
     submit = SubmitField('Save')

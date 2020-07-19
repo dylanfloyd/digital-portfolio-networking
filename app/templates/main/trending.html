@@ -19,7 +19,7 @@
     <div class="card-group mt-3 center-block" style="max-width: max-content;">
 
         {% for project in projects %}
-            {{ render_card(project, project.creator) }}
+            {{ render_card(project, project.creator, current_user) }}
         {% endfor %}
 
     </div>

@@ -11,7 +11,7 @@ from flask_script import Command
 
 from app import db
 from app.models.user_models import User, Role
-from app.models.project_models import Project
+from app.models.project_models import Project, ProjectLike
 
 class InitDbCommand(Command):
     """ Initialize the database."""
