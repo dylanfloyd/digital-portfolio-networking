@@ -24,8 +24,13 @@ class Project(db.Model):
     # Relationships:
     # creator_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
     creator_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    likes = db.relationship('ProjectLike', backref='project', lazy='dynamic')
 
-
+class ProjectLike(db.Model):
+    __tablename__ = 'project_like'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
 
 class EditProjectForm(FlaskForm):

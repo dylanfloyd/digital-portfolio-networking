@@ -11,7 +11,6 @@
 {#    <p><a href="{{ url_for('user.change_password') }}">Change password</a></p>#}
 {##}
 
-
 {#    <div id="-div" style="background-color: #3AAFA9; min-width: max-content; padding-bottom: 1rem"></div>#}
 
     <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%; min-height: 10rem">
@@ -36,6 +35,11 @@
                 <a href="#" class="btn text-white bg-dark" style="padding: 0"> + Follow</a>
             </div>
         </div>
+        {% if user.id == current_user.id %}
+            <a href="{{ url_for('main.user_profile_page') }}" class='btn text-muted text-white bg-white text-center'  style="padding: 0">
+                This is a PUBLIC view of your portfolio. Click here to make changes or additions to your portfolio.
+            </a>
+        {% endif %}
     </div>
     <div class="card-group center-block" style="max-width: max-content;">
 
@@ -114,7 +118,7 @@
 
 
         {% for project in projects %}
-            {{ render_card(project, user) }}
+            {{ render_card(project, user, current_user) }}
         {% endfor %}
     </div>
 
