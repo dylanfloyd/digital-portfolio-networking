@@ -10,7 +10,7 @@ from flask_user import current_user, login_required, roles_required, current_app
 from app import db
 from app.models.user_models import UserProfileForm, User, UsersRoles
 from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike
-# from forms import NewProjectForm
+#TODO: # import flask_whooshalchemy as wa
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
 # project_blueprint = Blueprint('project', __name__, template_folder='templates')
