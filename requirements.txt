@@ -19,3 +19,4 @@ pytest-cov==2.4.0
 # Additional:
 email_validator
 werkzeug==0.16.0
+flask_whooshalchemy

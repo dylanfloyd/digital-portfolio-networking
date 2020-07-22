@@ -3,16 +3,18 @@
 # Authors: Ling Thio <ling.thio@gmail.com>
 
 
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint, redirect, render_template, flash
 from flask import request, url_for
 from flask_user import current_user, login_required, roles_required, current_app
 
 from app import db
 from app.models.user_models import UserProfileForm, User, UsersRoles
-from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike
-#TODO: # import flask_whooshalchemy as wa
+from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike, ProjectSearchForm
+from sqlalchemy import or_
+# import flask_whooshalchemy as wa
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
+# wa.whoosh_index(app=current_app, model=Project)
 # project_blueprint = Blueprint('project', __name__, template_folder='templates')
 
 # The Home page is accessible to anyone
@@ -331,3 +333,34 @@ def favorite_action(project_id, action):
         current_user.unlike_project(project)
         db.session.commit()
     return redirect(request.referrer)
+
+
+@main_blueprint.route('/main/search_page/results')
+def search(search_form):
+    results = []
+    search_str = search_form.data['searchbar']
+
+    if search_str == '':
+        results = Project.query.all()
+    else:
+        search_input = "%{0}%".format(search_str)
+        results = Project.query.filter(or_(Project.proj_title.like(search_input),
+                                            Project.proj_desc.like(search_input),
+                                            Project.proj_tags.like(search_input),
+                                            User.username.like(search_input)))
+
+    if not results:
+        flash('No results found. Please try searching for another term.')
+        return redirect(url_for('main.search_page'))
+    else:
+        return render_template('main/search_page.html', form=search_form, projects=results, current_user=current_user)
+
+
+@main_blueprint.route('/main/search_page', methods=['GET', 'POST'])
+def search_page():
+    search_form = ProjectSearchForm(request.form)
+    if search_form.validate_on_submit():
+    # if request.method == 'POST':
+        return search(search_form)
+    projects = []
+    return render_template('main/search_page.html', form=search_form, projects=projects, current_user=current_user)  #, form=form)

@@ -76,3 +76,9 @@ class NewProjectForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class ProjectSearchForm(FlaskForm):
+    searchbar = StringField('')
+    submit = SubmitField('Submit')
+
+
+

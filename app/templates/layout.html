@@ -59,12 +59,12 @@
 
                 {% if current_user.is_authenticated %}
 {#                    <a href="{{ url_for('main.user_profile_page') }}" class="text-white">{{ current_user.first_name or current_user.username or current_user.email }}'s User Profile Page</a>#}
-{#                    <a href="/main/portfolio" class="text-white">Portfolio</a>#}
-{#                    &nbsp; | &nbsp;#}
+                    <a href="/main/search_page" class="text-white">Search</a>
+                    &nbsp; | &nbsp;
                     <a href="/main/favorites" class="text-white">Favorites</a>
                     &nbsp; | &nbsp;
                     <a href="/main/trending" class="text-white">Trending</a>
-                       &nbsp; | &nbsp;
+                    &nbsp; | &nbsp;
                     <a href="/main/specialize" class="text-white">Specialize</a>
                     &nbsp; | &nbsp;
                     <a href="/main/network" class="text-white">Network</a>
