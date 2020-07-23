@@ -1,0 +1,53 @@
+{% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
+
+{% from "common/form_macros.html" import render_card, render_field, render_submit_field %}
+
+{% block content %}
+    <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%; min-height: 5rem">
+        <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
+            <h5 class="card-title ml-3 mr-3 mb-1 text-center">SEARCH</h5>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <p class="card-text text-center ml-4 mr-4" style="white-space: pre-wrap;">
+                Below is a list of projects related to your search.
+            </p>
+        </div>
+    </div>
+
+
+    <form action="" class=form method="POST">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.searchbar) }}
+    {{ render_submit_field(form.submit) }}
+    </form>
+{#    <form method="POST">#}
+{#        <input type="text" autofocus="autofocus" name="search_string">#}
+{#        <input type="submit" formaction="/main/search" value="Search">#}
+{#    </form>#}
+{#    <div class="col-sm-3 col-sm-offset-1 blog-sidebar">#}
+{#        <div class="sidebar-module sidebar-module-inset">#}
+{#            <h4>Search</h4>#}
+{#            <form class="form-inline" method="GET" action="search">#}
+{#                <div class="form-group">#}
+{#                    <label for="query">Name</label>#}
+{#                    <input type="text" class="form-control" name="query" id="query">#}
+{#                </div>#}
+{#                <button type="submit" class="btn btn-primary">Search</button>#}
+{#            </form>#}
+{#        </div>#}
+{#    </div>#}
+
+
+{# TODO: MAKE SURE TO ADD USERNAME TO PROJECTS TABLE via flask backref method, so can search on username too ..... OR ... See if its possible to use whooshbase on multiples tabl3s at once?#}
+    <div class="card-group mt-3 center-block" style="max-width: max-content;">
+
+        {% for project in projects %}
+            {{ render_card(project, project.creator, current_user) }}
+        {% endfor %}
+
+    </div>
+
+
+
+
+{% endblock %}

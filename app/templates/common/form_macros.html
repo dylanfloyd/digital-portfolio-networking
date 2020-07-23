@@ -51,6 +51,13 @@
            >
 {%- endmacro %}
 
+{% macro render_search_bar(field) %}
+    <form method="POST">
+        <input type="text" autofocus="autofocus" name="search_string">
+        <input type="submit" formaction="/main/search" value="Search">
+    </form>
+{% endmacro %}
+
 
 {% macro render_user_card(project, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
        <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
