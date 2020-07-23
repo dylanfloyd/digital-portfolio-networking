@@ -10,6 +10,10 @@ from app import db
 from app.models.project_models import Project, ProjectLike
 from wtforms.validators import DataRequired, Length, Email, URL
 
+network = db.Table('network', db.Model.metadata,
+                     db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
+                     db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
+                     )
 
 
 # Define the User data model. Make sure to add the flask_user.UserMixin !!
@@ -36,10 +40,19 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary='users_roles',
                             backref=db.backref('users', lazy='dynamic'))
     projects = db.relationship('Project', backref=db.backref('creator', lazy=True))
-    liked = db.relationship(
-        'ProjectLike',
-        foreign_keys='ProjectLike.user_id',
-        backref='user', lazy='dynamic')
+    liked = db.relationship('ProjectLike', foreign_keys='ProjectLike.user_id', backref='user', lazy='dynamic')
+
+    # following = db.relationship('Network', foreign_keys='Network.user_id',backref='user', lazy='dynamic')
+    # followers = db.relationship('Network', backref='user', lazy='dynamic')
+
+    followed = db.relationship(
+        'User', secondary=network,
+        primaryjoin=(network.c.follower_id == id),
+        secondaryjoin=(network.c.followed_id == id),
+        backref=db.backref('network', lazy='dynamic'), lazy='dynamic')
+
+
+
 
     def like_project(self, project):
         if not self.has_liked_project(project):
@@ -56,6 +69,50 @@ class User(db.Model, UserMixin):
         return ProjectLike.query.filter(
             ProjectLike.user_id == self.id,
             ProjectLike.project_id == project.id).count() > 0
+
+
+    def follow_user(self, user):
+        if not self.has_followed_user(user):
+            statement = network.insert().values(follower_id=self.id, followed_id=user.id)
+            db.session.execute(statement)
+            db.session.commit()
+            #self.network.append(user)
+
+    def unfollow_user(self, user):
+        if self.has_followed_user(user):
+            statement = network.delete().values(follower_id=self.id, followed_id=user.id)
+            db.session.execute(statement)
+            db.session.commit()
+            #self.network.remove(user)
+
+    def has_followed_user(self, user):
+        self.network.filter(network.c.followed_id == user.id).count() > 0
+
+
+        # abool = db.session.query(network).filter(network.c.follower_id==self.id and network.c.followed_id==user.id)
+        # return abool ##db.session.query_property(db.exists().where((network.c.follower_id == self.id) & (network.c.followed_id == user.id)))
+        # return User.query.join(network).join(User).filter((network.c.follower_id == self.id) & (network.c.followed_id == user.id)).count() > 0
+        # return network.query.filter(network.c.follower_id == self.id, network.c.followed_id == user.id).count() > 0
+
+    def followed_projects(self):
+        return Project.query.join(
+            network, (network.c.followed_id == Project.creator_id)).filter(
+            network.c.follower_id == self.id).order_by(
+            Project.date_added.desc())
+
+# class ProjectLike(db.Model):
+#     __tablename__ = 'project_like'
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
+
+# class Network(db.Model):
+#     __tablename__ = 'network'
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     user_followed_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
 
 # Define the Role data model
 class Role(db.Model):
