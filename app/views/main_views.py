@@ -165,23 +165,24 @@ def specialize_page():
 @main_blueprint.route('/main/network', methods=['GET', 'POST'])
 @login_required
 def network_page():
-    # # Initialize form
-    # form = UserProfileForm(request.form, obj=current_user)
-    #
-    # # Process valid POST
-    # if request.method == 'POST' and form.validate():
-    #     # Copy form fields to user_profile fields
-    #     form.populate_obj(current_user)
-    #
-    #     # Save user_profile
-    #     db.session.commit()
-    #
-    #     # Redirect to home page
-    #     return redirect(url_for('main.home_page'))
+    # projects = Project.query.all()
+    # user_ids_following = []
+    # projects_from_network = []
+    # for proj in projects:
+    #     project_creator = User.query.filter(User.id == proj.creator_id).first()
+    #     if current_user.has_followed_user(project_creator):
+    #         projects_from_network.append(proj)
 
-    # Process GET or invalid POST
-    return render_template('main/network.html')  #, form=form)
+    projects_from_network = current_user.followed_projects()
 
+        # if proj.creator_id in user_ids_following:
+        #     projects_from_network.append(proj)
+        # else:
+        #     proj_creator = User.query.filter(User.id == proj.creator_id).first()
+        #     if current_user.has_followed_user(proj_creator):
+        #         projects_from_network.append(proj)
+
+    return render_template('main/network.html', current_user=current_user, projects=projects_from_network)  #, form=form)
 
 @main_blueprint.route('/main/user_settings', methods=['GET', 'POST'])
 @login_required
@@ -334,6 +335,17 @@ def favorite_action(project_id, action):
         db.session.commit()
     return redirect(request.referrer)
 
+@main_blueprint.route('/follow/<int:user_id>/<action>')
+@login_required
+def follow_action(user_id, action):
+    some_user = User.query.filter_by(id=user_id).first_or_404()
+    if action == 'follow':
+        current_user.follow_user(some_user)
+        db.session.commit()
+    if action == 'unfollow':
+        current_user.unfollow_user(some_user)
+        db.session.commit()
+    return redirect(request.referrer)
 
 @main_blueprint.route('/main/search_page/results')
 def search(search_form):

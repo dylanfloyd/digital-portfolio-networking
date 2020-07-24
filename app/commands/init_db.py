@@ -10,7 +10,7 @@ from flask import current_app
 from flask_script import Command
 
 from app import db
-from app.models.user_models import User, Role
+from app.models.user_models import User, Role, network
 from app.models.project_models import Project, ProjectLike
 
 class InitDbCommand(Command):
@@ -118,6 +118,13 @@ def create_users():
 
 
     # Save to DB
+    db.session.commit()
+
+    # Adding followers table to the database (note: this is just a table, not a Model)
+    # db.session.add(followers)
+    # db.session.commit()
+    statement = network.insert().values(follower_id=user2.id, followed_id=user3.id)
+    db.session.execute(statement)
     db.session.commit()
 
 

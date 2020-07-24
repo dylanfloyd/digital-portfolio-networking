@@ -21,25 +21,35 @@
         <div class="card-body" style="padding: 0">
             <p class="card-text ml-4 mr-4 text-center" style="white-space: pre-wrap">{{ user.bio }}</p>
         </div>
-        <div class="card-footer mt-1 mb-1" style="padding: 0">
-{#            <div class="pull-left ml-3">#}
-{#                <p class="pull-left">| {{ user.email }}</p>#}
-{#                <a href="https://www.google.com" target="_blank" class="btn btn text-white bg-dark" style="padding: 0">#}
-{#                    @{{ user.username }}#}
-{#                </a>#}
-{#            </div>#}
-            <div class="pull-left ml-3 mb-0 text-center">
-                <p class="mb-0">@{{ user.username }} | {{ user.email }}</p>
-            </div>
-            <div class="pull-right mr-3">
-                <a href="#" class="btn text-white bg-dark" style="padding: 0"> + Follow</a>
-            </div>
-        </div>
         {% if user.id == current_user.id %}
+            <div class="card-footer mt-1 mb-1" style="padding: 0">
+                <div class="pull-left ml-3 mb-0 text-center">
+                    <p class="mb-0">@{{ user.username }} | {{ user.email }}</p>
+                </div>
+                <div class="pull-right mr-3">
+                    <a href="#" class="btn text-white bg-dark" style="padding: 0"> + Follow</a>
+                </div>
+            </div>
             <a href="{{ url_for('main.user_profile_page') }}" class='btn text-muted text-white bg-white text-center'  style="padding: 0">
                 This is a PUBLIC view of your portfolio. Click here to make changes or additions to your portfolio.
             </a>
+        {% else %}
+            <div class="card-footer mt-1 mb-1" style="padding: 0">
+                <div class="pull-left ml-3 mb-0 text-center">
+                    <p class="mb-0">@{{ user.username }} | {{ user.email }}</p>
+                </div>
+                <div class="pull-right mr-3">
+    {#                <a href="#" class="btn text-white bg-dark" style="padding: 0"> + Follow</a>#}
+                      {% if current_user.has_followed_user(user) %}
+                        <a href="{{ url_for('main.follow_action', user_id=user.id, action='unfollow') }}" class="btn text-white" style="padding: 0">Unfollow</a>
+                      {% else %}
+                        <a href="{{ url_for('main.follow_action', user_id=user.id, action='follow') }}" class="btn text-white" style="padding: 0">+ Follow</a>
+                      {% endif %}
+                </div>
+            </div>
         {% endif %}
+
+
     </div>
     <div class="card-group center-block" style="max-width: max-content;">
 
