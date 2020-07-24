@@ -73,26 +73,17 @@ class User(db.Model, UserMixin):
 
     def follow_user(self, user):
         if not self.has_followed_user(user):
-            statement = network.insert().values(follower_id=self.id, followed_id=user.id)
-            db.session.execute(statement)
-            db.session.commit()
-            #self.network.append(user)
+            self.followed.append(user)
 
     def unfollow_user(self, user):
         if self.has_followed_user(user):
-            statement = network.delete().values(follower_id=self.id, followed_id=user.id)
-            db.session.execute(statement)
-            db.session.commit()
-            #self.network.remove(user)
+            self.followed.remove(user)
 
     def has_followed_user(self, user):
-        self.network.filter(network.c.followed_id == user.id).count() > 0
+        following = self.followed.all()
+        has_followed = user in following
+        return has_followed
 
-
-        # abool = db.session.query(network).filter(network.c.follower_id==self.id and network.c.followed_id==user.id)
-        # return abool ##db.session.query_property(db.exists().where((network.c.follower_id == self.id) & (network.c.followed_id == user.id)))
-        # return User.query.join(network).join(User).filter((network.c.follower_id == self.id) & (network.c.followed_id == user.id)).count() > 0
-        # return network.query.filter(network.c.follower_id == self.id, network.c.followed_id == user.id).count() > 0
 
     def followed_projects(self):
         return Project.query.join(
@@ -100,17 +91,6 @@ class User(db.Model, UserMixin):
             network.c.follower_id == self.id).order_by(
             Project.date_added.desc())
 
-# class ProjectLike(db.Model):
-#     __tablename__ = 'project_like'
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-#     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-
-# class Network(db.Model):
-#     __tablename__ = 'network'
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-#     user_followed_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 

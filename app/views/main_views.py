@@ -347,7 +347,6 @@ def follow_action(user_id, action):
         db.session.commit()
     return redirect(request.referrer)
 
-
 @main_blueprint.route('/main/search_page/results')
 def search(search_form):
     results = []
