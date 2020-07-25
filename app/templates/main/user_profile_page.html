@@ -3,7 +3,7 @@
 {% block content %}
 
 {#    {{% user_projects=select * from  }}#}
-    {% from "common/form_macros.html" import render_user_card %}
+    {% from "common/form_macros.html" import render_user_card, render_user_card_given_privacy %}
 
 {#    <h1 style="text-align: center">Portfolio</h1>#}
 {#    <p>Profile Button: First Last</p>#}
@@ -114,7 +114,7 @@
 
 
         {% for project in projects %}
-            {{ render_user_card(project, current_user) }}
+            {{ render_user_card_given_privacy(project, current_user) }}
         {% endfor %}
     </div>
 

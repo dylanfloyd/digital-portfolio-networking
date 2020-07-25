@@ -1,6 +1,6 @@
 {% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
 
-{% from "common/form_macros.html" import render_card %}
+{% from "common/form_macros.html" import render_card, render_card_given_privacy %}
 
 
 {% block content %}
@@ -119,7 +119,7 @@
     <div class="card-group mt-3 center-block" style="max-width: max-content;">
 
         {% for project in projects %}
-            {{ render_card(project, project.creator, current_user) }}
+            {{ render_card_given_privacy(project, project.creator, current_user) }}
         {% endfor %}
 
     </div>
