@@ -84,7 +84,8 @@ def create_users():
     project1 = create_project(proj_title='Insignia-Prototype 1',
                              proj_desc='This first description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.google.com",
-                             creator=user2 #user.id
+                             creator=user2,
+                             privacy_setting="PUBLIC"
                              )
     db.session.add(project1)
     db.session.commit()
@@ -93,7 +94,8 @@ def create_users():
     project2 = create_project(proj_title='Insignia-Prototype 2',
                              proj_desc='This second description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.facebook.com",
-                             creator=user2 #user.id
+                             creator=user2,
+                             privacy_setting="NETWORK"
                              )
     db.session.add(project2)
     db.session.commit()
@@ -101,7 +103,8 @@ def create_users():
     project3 = create_project(proj_title='Insignia-Prototype 3',
                              proj_desc='This third description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.twitter.com",
-                             creator=user2 #user.id
+                             creator=user2,
+                             privacy_setting="PUBLIC"
                              )
     db.session.add(project3)
     db.session.commit()
@@ -112,7 +115,9 @@ def create_users():
                                        "It's a platform for sharing projects they are proud of and search for interesting projects "
                                        "of all kinds across all subjects to promote more personalized learning.",
                              proj_link="http://127.0.0.1:5000/",
-                             creator=user3 #user.id
+                             creator=user3,
+                             privacy_setting="PUBLIC"
+                             # privacy_setting=1
                              )
     db.session.add(project3)
 
@@ -155,12 +160,13 @@ def find_or_create_user(first_name, last_name, username, email, password, role=N
         db.session.add(user)
     return user
 
-def create_project(proj_title, proj_desc, proj_link, creator):
+def create_project(proj_title, proj_desc, proj_link, privacy_setting, creator):
     """ Create new project """
     project = Project(proj_title=proj_title,
                       proj_desc=proj_desc,
                       proj_link=proj_link,
                       date_added=datetime.datetime.today(),
+                      privacy_setting=privacy_setting,
                       num_favorites=0,
                       creator=creator
                       )

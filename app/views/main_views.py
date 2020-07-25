@@ -232,7 +232,8 @@ def edit_project_page(proj_id):
             title=this_project.proj_title,
             url=this_project.proj_link,
             desc=this_project.proj_desc,
-            tags=this_project.proj_tags
+            tags=this_project.proj_tags,
+            privacy=this_project.privacy_setting
         )
 
 
@@ -257,16 +258,18 @@ def edit_project_page(proj_id):
             this_project.proj_desc = request.form['desc']
             this_project.proj_link = request.form['url']
             this_project.proj_tags = request.form['tags']
+            this_project.privacy_setting = request.form['privacy']
 
             # Save user_profile
             db.session.commit()
+
 
             # Redirect to home page
             return redirect(url_for('main.user_profile_page'))
 
 
         # Process GET or invalid POST
-        return render_template('main/edit_project_page.html', form=previous_proj_form, proj_id=proj_id) #form)
+        return render_template('main/edit_project_page.html', form=previous_proj_form, proj_id=proj_id, project=this_project) #form)
 
     else:
         current_app.login_manager.unauthorized()
@@ -294,6 +297,7 @@ def create_project():
             proj_desc=request.form['desc'],
             proj_link=request.form['url'],
             proj_tags=request.form['tags'],
+            privacy_setting=request.form['privacy'],
             creator=current_user
         )
         db.session.add(new_project)

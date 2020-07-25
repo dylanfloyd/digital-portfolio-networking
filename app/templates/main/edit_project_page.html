@@ -21,16 +21,24 @@
     {#            {{ render_field(form.desc, tabindex=90) }}#}
 
                 {{ render_field(form.tags, tabindex=90) }}
+                <input type="radio" name="privacy" id="option1" value="PUBLIC" {% if project.privacy_setting == "PUBLIC" %} checked {% endif %}> PUBLIC </input><br>
+                <input type="radio" name="privacy" id="option2" value="NETWORK" {% if project.privacy_setting == "NETWORK" %} checked {% endif %}> NETWORK </input><br>
+                <input type="radio" name="privacy" id="option3" value="PRIVATE" {% if project.privacy_setting == "PRIVATE" %} checked {% endif %}> PRIVATE </input><br>
+                <br>
+                <a type="button" name="delete_button" method="POST" href="/main/delete_project/{{proj_id}}" value="{{ proj_id }}" class="btn text-white bg-danger mb-3 pull-left">Delete Project</a>
 
                 {{ render_submit_field(form.submit) }}
             </form>
-                <a type="button" name="delete_button" method="POST" href="/main/delete_project/{{proj_id}}" value="{{ proj_id }}" class="btn text-white bg-danger mb-3 pull-left">Delete Project</a>
+{#                <a type="button" name="delete_button" method="POST" href="/main/delete_project/{{proj_id}}" value="{{ proj_id }}" class="btn text-white bg-danger mb-3 pull-left">Delete Project</a>#}
 
     {#            {{ form.submit }}#}
     {#        {{ render_submit_field(form.submit) }}#}
+
         </div>
+
     </div>
 
 {#    #TODO: Add a delete project option!!#}
 
 {% endblock %}
+

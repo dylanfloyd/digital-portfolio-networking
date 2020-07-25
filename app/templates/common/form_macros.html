@@ -71,7 +71,7 @@
 {% macro render_user_card(project, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
        <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
             <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
-                <small class="text-muted pull-left ml-3">Project-Type</small>
+                <small class="text-muted pull-left ml-3">{{ project.num_favorites }} favorites</small>
                 <small class="text-muted pull-right mr-3">{{ project.date_added.strftime('%Y-%m-%d') }}</small>
             </div>
             <div class="card-body" style="padding: 0">
@@ -92,8 +92,7 @@
                     </a>
                 </div>
                 <div class="pull-right mr-3">
-                    <small class="text-muted">{{ project.num_favorites }}</small>
-                    <a href="#" class="btn" style="padding: 0"><3</a>
+                    <small class="text-muted">{{ project.privacy_setting }}</small>
                 </div>
             </div>
            <a type="button" name="edit_button" method="POST" href="/main/edit_project/{{ project.id }}" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</a>
