@@ -1,29 +1,60 @@
 {% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
+{% from "common/form_macros.html" import render_field, render_submit_field %}
 
 {% block content %}
-<h1>Edit Your Account Settings and Info</h1>
+
+    <div class="card mt-3 bg-dark">
+        <div class="container col-centered">
+            <h2 class="text-white">{%trans%}Edit Your Info, Interests, and Account Settings{%endtrans%}</h2>
+
+            <form action="" method="POST" class="form text-white" role="form">
+                {{ form.hidden_tag() }}
 
 
-{% from "common/form_macros.html" import render_field, render_submit_field %}
-<form action="" method="POST" class="form" role="form">
-  <div class="row">
-    <div class="col-sm-6 col-md-5 col-lg-4">
-    {{ form.hidden_tag() }}
+                {{ render_field(form.first_name, tabindex=240) }}
+
+                {{ render_field(form.last_name, tabindex=250) }}
+
+                {{ render_field(form.bio, tabindex=240, style="min-height: 100px") }}
+
+                {{ render_field(form.interests, tabindex=240, style="min-height: 100px") }}
+
+                {{ render_submit_field(form.submit, tabindex=280) }}
+
+{#                <p class="mt-2"><a href="{{ url_for('user.change_username') }}">Change username</a></p>#}
+{##}
+{#                <p class="mt-2"><a href="{{ url_for('user.change_password') }}">Change password</a></p>#}
+
+                <a type="button" href="{{ url_for('user.change_username') }}" class="btn text-white bg-info mb-3 mr-3 pull-left">Change Username</a>
+                <a type="button" href="{{ url_for('user.change_password') }}" class="btn text-white bg-info mb-3 mr-3 pull-left">Change Password</a>
 
 
-    {{ render_field(form.first_name, tabindex=240) }}
-
-    {{ render_field(form.last_name, tabindex=250) }}
-
-    {{ render_field(form.user_bio, tabindex=240) }}
-
-    {{ render_submit_field(form.submit, tabindex=280) }}
-
-    <p class="mt-2"><a href="{{ url_for('user.change_password') }}">Change password</a></p>
-
+            </form>
+        </div>
     </div>
-  </div>
-</form>
+{#<form action="" method="POST" class="form" role="form">#}
+{#  <div class="row">#}
+{#    <div class="col-sm-6 col-md-5 col-lg-4">#}
+{#    {{ form.hidden_tag() }}#}
+{##}
+{##}
+{#    {{ render_field(form.first_name, tabindex=240) }}#}
+{##}
+{#    {{ render_field(form.last_name, tabindex=250) }}#}
+{##}
+{#    {{ render_field(form.bio, tabindex=240, style="min-height: 100px") }}#}
+{##}
+{#    {{ render_field(form.interests, tabindex=240, style="min-height: 100px") }}#}
+{##}
+{#    {{ render_submit_field(form.submit, tabindex=280) }}#}
+{##}
+{#    <p class="mt-2"><a href="{{ url_for('user.change_username') }}">Change username</a></p>#}
+{##}
+{#    <p class="mt-2"><a href="{{ url_for('user.change_password') }}">Change password</a></p>#}
+{##}
+{#    </div>#}
+{#  </div>#}
+{#</form>#}
 
 
 

@@ -10,8 +10,8 @@ from flask import current_app
 from flask_script import Command
 
 from app import db
-from app.models.user_models import User, Role
-from app.models.project_models import Project
+from app.models.user_models import User, Role, network
+from app.models.project_models import Project, ProjectLike
 
 class InitDbCommand(Command):
     """ Initialize the database."""
@@ -39,27 +39,92 @@ def init_db():
 
 def create_users():
     """ Create users """
-
+    generic_bio = "                About me section describing whatever the user wants to describe for their public profile. Example: OMSCS Grad student at Georgia Tech. Currently prototyping this application which you are examining. Words phrases sentences, etc. Words phrases sentences, etc. Words phrases sentences, etc. Words phrases sentences, etc. Words phrases sentences, etc..."
     # Create all tables
     db.create_all()
     db.session.commit()
 
     # Adding roles
     admin_role = find_or_create_role('admin', u'Admin')
+    db.session.add(admin_role)
+    db.session.commit()
 
     # Add users
-    user = find_or_create_user(u'Admin', u'Example', u'admin@example.com', 'Password1', admin_role)
-    user = find_or_create_user(u'Member', u'Example', u'member@example.com', 'Password1')
-    # user = find_or_create_user(u'Dylan', u'Floyd', u'dylanfloyd@example.com', 'apwd')
+    user1 = find_or_create_user(u'Admin',
+                                u'Example',
+                                u'administr8or',
+                                u'admin@example.com',
+                                'Password1',
+                                admin_role,
+                                u'This is the administrators bio. We run things around here')
+    db.session.add(user1)
+    db.session.commit()
+
+    user2 = find_or_create_user(u'Member',
+                                u'Example',
+                                u'youser_demo',
+                                u'member@example.com',
+                                'Password1',
+                                bio=generic_bio)
+    db.session.add(user2)
+    db.session.commit()
+
+    user3 = find_or_create_user(u'Dylan',
+                                u'Floyd',
+                                u'dylanfloyd',
+                                u'dfloyd7@gatech.edu',
+                                'Password1',
+                                bio=generic_bio)
+    db.session.add(user2)
+    db.session.commit()
+
+
 
     # Add dummy projects
-    project = create_project(proj_title='Insignia-Prototype',
-                             proj_desc='This description is a placeholder for the Insignia-Prototype project.',
+    project1 = create_project(proj_title='Insignia-Prototype 1',
+                             proj_desc='This first description is a placeholder for the Insignia-Prototype project.',
                              proj_link="https://www.google.com",
-                             cur_user=1 #user.id
+                             creator=user2 #user.id
                              )
+    db.session.add(project1)
+    db.session.commit()
+
+
+    project2 = create_project(proj_title='Insignia-Prototype 2',
+                             proj_desc='This second description is a placeholder for the Insignia-Prototype project.',
+                             proj_link="https://www.facebook.com",
+                             creator=user2 #user.id
+                             )
+    db.session.add(project2)
+    db.session.commit()
+
+    project3 = create_project(proj_title='Insignia-Prototype 3',
+                             proj_desc='This third description is a placeholder for the Insignia-Prototype project.',
+                             proj_link="https://www.twitter.com",
+                             creator=user2 #user.id
+                             )
+    db.session.add(project3)
+    db.session.commit()
+
+
+    project4 = create_project(proj_title='Insignia-Prototype Web App',
+                             proj_desc="Here's a link to the home page of the web app I created in my Ed Tech class."
+                                       "It's a platform for sharing projects they are proud of and search for interesting projects "
+                                       "of all kinds across all subjects to promote more personalized learning.",
+                             proj_link="http://127.0.0.1:5000/",
+                             creator=user3 #user.id
+                             )
+    db.session.add(project3)
+
 
     # Save to DB
+    db.session.commit()
+
+    # Adding followers table to the database (note: this is just a table, not a Model)
+    # db.session.add(followers)
+    # db.session.commit()
+    statement = network.insert().values(follower_id=user2.id, followed_id=user3.id)
+    db.session.execute(statement)
     db.session.commit()
 
 
@@ -72,11 +137,12 @@ def find_or_create_role(name, label):
     return role
 
 
-def find_or_create_user(first_name, last_name, email, password, role=None):
+def find_or_create_user(first_name, last_name, username, email, password, role=None, bio=''):
     """ Find existing user or create new user """
     user = User.query.filter(User.email == email).first()
     if not user:
-        user = User(email=email,
+        user = User(username=username,
+                    email=email,
                     first_name=first_name,
                     last_name=last_name,
                     password=current_app.user_manager.password_manager.hash_password(password),
@@ -84,17 +150,19 @@ def find_or_create_user(first_name, last_name, email, password, role=None):
                     email_confirmed_at=datetime.datetime.utcnow())
         if role:
             user.roles.append(role)
+        if bio:
+            user.bio=bio
         db.session.add(user)
     return user
 
-def create_project(proj_title, proj_desc, proj_link, cur_user):
+def create_project(proj_title, proj_desc, proj_link, creator):
     """ Create new project """
     project = Project(proj_title=proj_title,
                       proj_desc=proj_desc,
                       proj_link=proj_link,
-                      user_id=cur_user,
                       date_added=datetime.datetime.today(),
-                      num_favorites=0
+                      num_favorites=0,
+                      creator=creator
                       )
     db.session.add(project)
     return project
