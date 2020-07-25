@@ -11,6 +11,7 @@ from app import db
 from app.models.user_models import UserProfileForm, User, UsersRoles
 from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike, ProjectSearchForm
 from sqlalchemy import or_
+import re
 # import flask_whooshalchemy as wa
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
@@ -144,22 +145,29 @@ def trending_page():
 @main_blueprint.route('/main/specialize', methods=['GET', 'POST'])
 @login_required
 def specialize_page():
-    # # Initialize form
-    # form = UserProfileForm(request.form, obj=current_user)
-    #
-    # # Process valid POST
-    # if request.method == 'POST' and form.validate():
-    #     # Copy form fields to user_profile fields
-    #     form.populate_obj(current_user)
-    #
-    #     # Save user_profile
-    #     db.session.commit()
-    #
-    #     # Redirect to home page
-    #     return redirect(url_for('main.home_page'))
+    interests_str = current_user.interests.lower()
+    rgx = r'#[a-zA-Z]+'
+    all_interests = re.findall(rgx, interests_str)
+    all_interests_set = set(all_interests)
+    relevant_projects = []
+    relevant_tags = []
+    all_projects = Project.query.all() #.order_by(Project.date_added.desc())
+    for proj in all_projects:
+        ptags_str = proj.proj_tags.lower()
+        ptags = re.findall(rgx, ptags_str)
+        these_relevant_tags = all_interests_set.intersection(ptags)
+        if len(these_relevant_tags) > 0:
+            relevant_tags.extend(list(these_relevant_tags))
+            relevant_projects.append(proj)
 
-    # Process GET or invalid POST
-    return render_template('main/specialize.html')  #, form=form)
+    relevant_tags = list(set(relevant_tags).intersection(relevant_tags)) #removes duplicate tags
+    #TODO: improve specialization results by adding less relevant results after exact matches
+    #Can add another option to check for similar substrings, and put those projects after the more relevant ones.
+    #Example: #learning could return #machinelearning, but it'd be less relevant b/c not explicitly stated
+
+
+
+    return render_template('main/specialize.html', current_user=current_user, projects=relevant_projects, tags_matched=relevant_tags)  #, form=form)
 
 
 @main_blueprint.route('/main/network', methods=['GET', 'POST'])
