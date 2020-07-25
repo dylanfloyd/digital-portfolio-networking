@@ -46,6 +46,7 @@ class EditProjectForm(FlaskForm):
         Length(min=4, message=('Your message is too short.'))])
     tags = StringField('#Specialization #Tags: ')
 
+    delete = SubmitField('Delete Project')
 
     # title = StringField('Project Title', validators=[
     #     validators.DataRequired('Project Title is required.')])

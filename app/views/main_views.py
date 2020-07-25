@@ -238,21 +238,25 @@ def edit_project_page(proj_id):
 
         # Process valid POST
         if request.method == 'POST' and previous_proj_form.validate():
-            # Copy form fields to user_profile fields
-            # proj_search_result.data = dict(
-            #     proj_title=request.form['title'],
-            #     proj_desc=request.form['desc'],
-            #     proj_link=request.form['url'],
-            #     proj_tags=request.form['tags']
-            # )
-            # form.populate_obj(current_user)
+            # post_form = EditProjectForm(request.form)
+            # assert False==True
+            # if post_form.validate_on_submit():
+            #     if post_form.delete.data:
+            #         worked=True
+            #         assert False == True
+            #
+            # # if post_form.delete.data:
+            #     kinda=True
+            #     assert False == True
+            #
+            # not_even_close=True
+            # assert False==True
 
             #Update project in database:
             this_project.proj_title = request.form['title']
             this_project.proj_desc = request.form['desc']
             this_project.proj_link = request.form['url']
             this_project.proj_tags = request.form['tags']
-
 
             # Save user_profile
             db.session.commit()
@@ -262,7 +266,7 @@ def edit_project_page(proj_id):
 
 
         # Process GET or invalid POST
-        return render_template('main/edit_project_page.html', form=previous_proj_form) #form)
+        return render_template('main/edit_project_page.html', form=previous_proj_form, proj_id=proj_id) #form)
 
     else:
         current_app.login_manager.unauthorized()
@@ -384,3 +388,22 @@ def search_page():
         return search(search_form)
     projects = []
     return render_template('main/search_page.html', form=search_form, projects=projects, current_user=current_user)  #, form=form)
+
+@main_blueprint.route('/main/delete_project/<int:proj_id>', methods=['GET'])
+@login_required
+def delete_project_page(proj_id):
+    # Initialize form
+    #TODO: Remove ex_proj later. Only for demonstration in Milestone 2
+
+    this_project = Project.query.filter(Project.id == proj_id).first() #should only ever be one b/c unique
+    this_project_creator_id = this_project.creator_id
+
+    if this_project_creator_id == current_user.id: #Ensures that you can only edit projects if you made it.
+        Project.query.filter_by(id=proj_id).delete()
+        db.session.commit()
+        return redirect(url_for('main.user_profile_page'))
+
+    else:
+        current_app.login_manager.unauthorized()
+        # current_app.login_manager.unauthorized_callback("You do not have permission to edit this project.")
+        return redirect(url_for('main.home_page'))
