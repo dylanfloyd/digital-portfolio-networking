@@ -13,7 +13,7 @@ CSRF_ENABLED = True
 
 # Flask-SQLAlchemy settings
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_ECHO = True
+SQLALCHEMY_ECHO = False
 
 # Flask-User settings
 USER_APP_NAME = APP_NAME

@@ -40,12 +40,21 @@
     {% endfor %}
 {%- endmacro %}
 
-
+{#{% macro render_delete_field(field, label=None, tabindex=None) -%}#}
+{#    {% if not label %}{% set label=field.label.text %}{% endif %}#}
+    {#<button type="submit" class="form-control btn btn-default btn-primary">{{label}}</button>#}
+{#    <a type="button" name="edit_button" method="POST" href="/main/edit_project/{{ project.id }}" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</a>#}
+{##}
+{#    <input type="button" class="text-white bg-danger pull-left" name="delete_btn" value="{{label}}"#}
+{#           {% if style  %} style="{{ styleinfo }}"#}
+{#           {% if tabindex %}tabindex="{{ tabindex }}"{% endif %}#}
+{#           >#}
+{#{%- endmacro %}#}
 
 {% macro render_submit_field(field, label=None, tabindex=None) -%}
     {% if not label %}{% set label=field.label.text %}{% endif %}
     {#<button type="submit" class="form-control btn btn-default btn-primary">{{label}}</button>#}
-    <input type="submit" class="text-dark pull-right" value="{{label}}"
+    <input type="submit" class="text-white bg-info pull-right" value="{{label}}"
 {#           {% if style  %} style="{{ styleinfo }}"#}
            {% if tabindex %}tabindex="{{ tabindex }}"{% endif %}
            >

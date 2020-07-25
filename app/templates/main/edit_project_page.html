@@ -21,9 +21,11 @@
     {#            {{ render_field(form.desc, tabindex=90) }}#}
 
                 {{ render_field(form.tags, tabindex=90) }}
-                {{ render_submit_field(form.submit) }}
 
+                {{ render_submit_field(form.submit) }}
             </form>
+                <a type="button" name="delete_button" method="POST" href="/main/delete_project/{{proj_id}}" value="{{ proj_id }}" class="btn text-white bg-danger mb-3 pull-left">Delete Project</a>
+
     {#            {{ form.submit }}#}
     {#        {{ render_submit_field(form.submit) }}#}
         </div>
