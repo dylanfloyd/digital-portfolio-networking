@@ -160,12 +160,15 @@ def find_or_create_user(first_name, last_name, username, email, password, role=N
         db.session.add(user)
     return user
 
-def create_project(proj_title, proj_desc, proj_link, privacy_setting, creator):
+def create_project(proj_title, proj_desc, proj_link, privacy_setting, creator, date_added=None):
     """ Create new project """
+    if date_added is None:
+        date_added = datetime.datetime.today()
+
     project = Project(proj_title=proj_title,
                       proj_desc=proj_desc,
                       proj_link=proj_link,
-                      date_added=datetime.datetime.today(),
+                      date_added=date_added,
                       privacy_setting=privacy_setting,
                       num_favorites=0,
                       creator=creator
