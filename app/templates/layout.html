@@ -49,17 +49,13 @@
         <!-- Application specific HTML -->
 
         <!-- -- NAV BAR -->
-        <div id="header-div" class="clearfix with-margins mt-0 mb-0 ml-0 mr-0" style="background-color: #3AAFA9">
-            <div class="pull-left  mt-1 ml-3 mb-3"><a href="/"><h1 class="no-margins text-white">Insignia Prototype</h1></a></div>
-            <div class="pull-right mt-3 mr-3">
-
-
-
-
+        <div id="header-div" class="mt-0 mb-0 ml-0 mr-0" style="margin: 0; min-width: 25rem; background-color: #3AAFA9">
+            <div class="text-center" style="width: 100%"><a href="/"><h1 class="no-margins text-white" style="margin: 0">Insignia Prototype</h1></a></div>
+            <div class="text-center bg-dark" style="margin:0; width: 100%">
 
                 {% if current_user.is_authenticated %}
 {#                    <a href="{{ url_for('main.user_profile_page') }}" class="text-white">{{ current_user.first_name or current_user.username or current_user.email }}'s User Profile Page</a>#}
-                    <a href="/main/search_page" class="text-white">Search</a>
+                    <a href="/main/search_page" class="text-white text-">Search</a>
                     &nbsp; | &nbsp;
                     <a href="/main/favorites" class="text-white">Favorites</a>
                     &nbsp; | &nbsp;
@@ -75,11 +71,12 @@
                     &nbsp; | &nbsp;
                     <a href="{{ url_for('user.logout') }}" class="text-white">Sign out</a>
                 {% else %}
-                    <a href="{{ url_for('user.login') }}" class="text-white">Sign in</a>
+                    <h4 class="text-muted bg-white" style="margin: 0">a platform to support personalized academic exploration</h4>
+{#                    <a href="{{ url_for('user.login') }}" class="text-white">Sign in</a>#}
                 {% endif %}
             </div>
         </div>
-        <hr class="no-margins"/>
+{#        <hr class="no-margins"/>#}
 
         <div id="main-div" style="background-color: #3AAFA9; padding-left: 3rem; padding-right: 3rem;">
         {% block pre_content %}{% endblock %}
@@ -98,8 +95,9 @@
             {%- endwith %}
         {% endblock %}
 
-        <div class="container-fluid" style="padding-left: 5rem; padding-right: 5rem; min-height: 50rem;">
-        {% block content %}{% endblock %}
+{#        <div class="container-fluid" style="padding-left: 5rem; padding-right: 5rem; min-height: 50rem;">#}
+        <div class="container-fluid" style="padding-left: 5rem; padding-right: 5rem; min-height: 100rem;">
+            {% block content %}{% endblock %}
         </div>
 
         {% block post_content %}{% endblock %}

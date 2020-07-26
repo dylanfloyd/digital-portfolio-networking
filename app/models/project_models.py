@@ -1,7 +1,7 @@
 from flask_user import UserMixin
 # from flask_user.forms import RegisterForm
 from flask_wtf import FlaskForm, RecaptchaField
-from wtforms import StringField, TextAreaField, SubmitField, validators
+from wtforms import StringField, TextAreaField, SubmitField, RadioField, validators
 from app import db
 from datetime import datetime
 from wtforms.validators import DataRequired, Length, Email, URL
@@ -20,6 +20,7 @@ class Project(db.Model):
     date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     num_favorites = db.Column(db.Integer, nullable=False, default=0)
     proj_tags = db.Column(db.String(1000), nullable=True, default="#Project #Tags")
+    privacy_setting = db.Column(db.String(20), nullable=False, default="PUBLIC") #OPTIONS: ["PUBLIC", "NETWORK", "PRIVATE"]
 
     # Relationships:
     # creator_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
@@ -45,6 +46,7 @@ class EditProjectForm(FlaskForm):
         DataRequired(),
         Length(min=4, message=('Your message is too short.'))])
     tags = StringField('#Specialization #Tags: ')
+    privacy = RadioField('Visible To: ', choices=[('PUBLIC','PUBLIC'), ('NETWORK','NETWORK'), ('PRIVATE','PRIVATE')], default="PUBLIC", coerce=str)
 
     delete = SubmitField('Delete Project')
 
@@ -64,16 +66,17 @@ class EditProjectForm(FlaskForm):
 
 class NewProjectForm(FlaskForm):
     """Contact form."""
-    title = StringField('Project Title', [
+    title = StringField('Project Title: ', [
         DataRequired()])
-    url = StringField('Project Link', [
+    url = StringField('Project Link: ', [
         DataRequired(),
         URL(message=('Not a valid web address.'))])
-    desc = TextAreaField('Project Desc.', [
+    desc = TextAreaField('Project Desc: ', [
         DataRequired(),
         Length(min=4, message=('Your message is too short.'))])
-    tags = StringField('#Specialization #Tags')
-
+    tags = StringField('#Specialization #Tags: ')
+    # privacy = RadioField('Visible To: ', choices=[(1,'PUBLIC'), (2,'NETWORK'), (3,'PRIVATE')], default=1, coerce=int)
+    privacy = RadioField('Visible To: ', choices=[('PUBLIC','PUBLIC'), ('NETWORK','NETWORK'), ('PRIVATE','PRIVATE')], default="PUBLIC", coerce=str)
     submit = SubmitField('Submit')
 
 
