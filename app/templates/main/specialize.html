@@ -1,127 +1,29 @@
 {% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
-{% from "common/form_macros.html" import render_card %}
+{% from "common/form_macros.html" import render_card, render_card_given_privacy %}
 
 {% block content %}
-    <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%; min-height: 5rem">
+    <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%; min-width: 18rem; min-height: 5rem">
         <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
             <h5 class="card-title ml-3 mr-3 mb-1 text-center">SPECIALIZED INTERESTS</h5>
-        </div>
-        <div class="card-body" style="padding: 0;">
-            <p class="card-text text-center ml-4 mr-4" style="white-space: pre-wrap;">
-                Description: Below is a list of projects that are related to your list of specialized interests.
-                Here's a list of your interests that we matched projects for:
-                {{ tags_matched }}
-            </p>
-            <p class="pull-right mb-0 mr-1 mt-0"><a href="/main/user_settings" class="text-muted">Edit my interests</a></p>
 
         </div>
+        <div class="card-body" style="padding: 0;">
+            <p class="card-text text-center ml-4 mr-4 mb-1" style="white-space: pre-wrap;">Description: Below is a list of projects that are related to your list of specialized interests. Here's a list of your interests that we matched projects for:</p>
+            <p class="card-text text-center ml-4 mr-4 mb-1 mt-1" style="white-space: pre-wrap;"> {{ tags_matched }} </p>
+
+        </div>
+{#        <div class="pull-right mr-3">#}
+{#            <a href="/main/user_settings" class="btn text text-white bg-dark" style="padding: 0">Edit My Interests</a>#}
+{#        </div>#}
+{#        <a type="button" name="edit__interests_button" href="/main/user_settings" class="btn btn mb-1 ml-3 mr-3 text-dark bg-white">Edit My Specialization Interests</a>#}
+        <div class="card-footer"><a href="/main/user_settings" class="btn pull-right btn-outline-light card-title ml-3 mr-3 mb-1 text-white">Edit My Interests</a></div>
+
     </div>
-{#    <div class="card-group center-block" style="max-width: max-content;">#}
-{##}
-{#        <div class="card text-white bg-dark mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem">#}
-{#            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">#}
-{#                <small class="text-muted pull-left ml-3">Project-Type</small>#}
-{#                <small class="text-muted pull-right mr-3">Date-Added</small>#}
-{#            </div>#}
-{#            <div class="card-body" style="padding: 0">#}
-{#                <h5 class="card-title ml-3 mr-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn btn text-white text-left bg-dark" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Short Proj. Title Button</a>#}
-{#                </h5>#}
-{#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
-{#            </div>#}
-{#            <div class="card-footer mt-1 mb-1" style="padding: 0">#}
-{#                <div class="pull-left ml-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn btn text-white bg-dark" style="padding: 0">#}
-{#                        @username#}
-{#                    </a>#}
-{#                </div>#}
-{#                <div class="pull-right mr-3">#}
-{#                    <small class="text-muted">1.1k</small>#}
-{#                    <a href="#" class="btn text-white bg-dark" style="padding: 0"><3</a>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#        <div class="card text-white bg-dark mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem">#}
-{#            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">#}
-{#                <small class="text-muted pull-left ml-3">Project-Type</small>#}
-{#                <small class="text-muted pull-right mr-3">Date-Added</small>#}
-{#            </div>#}
-{#            <div class="card-body" style="padding: 0">#}
-{#                <h5 class="card-title ml-3 mr-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn btn text-white text-left bg-dark" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Project Title Button - Lots of Words Used</a>#}
-{#                </h5>#}
-{#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
-{#            </div>#}
-{#            <div class="card-footer mt-1 mb-1" style="padding: 0">#}
-{#                <div class="pull-left ml-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn btn text-white bg-dark" style="padding: 0">#}
-{#                        @username#}
-{#                    </a>#}
-{#                </div>#}
-{#                <div class="pull-right mr-3">#}
-{#                    <small class="text-muted">1.1k</small>#}
-{#                    <a href="#" class="btn text-white bg-dark" style="padding: 0"><3</a>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#        <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">#}
-{#            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">#}
-{#                <small class="text-muted pull-left ml-3">Project-Type</small>#}
-{#                <small class="text-muted pull-right mr-3">Date-Added</small>#}
-{#            </div>#}
-{#            <div class="card-body" style="padding: 0">#}
-{#                <h5 class="card-title ml-3 mr-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Project Title Button - Lots of Words Used</a>#}
-{#                </h5>#}
-{##}
-{#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
-{#            </div>#}
-{#            <div class="card-footer mt-1 mb-1" style="padding: 0">#}
-{#                <div class="pull-left ml-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn" style="padding: 0">#}
-{#                        @username#}
-{#                    </a>#}
-{#                </div>#}
-{#                <div class="pull-right mr-3">#}
-{#                    <small class="text-muted">1.1k</small>#}
-{#                    <a href="#" class="btn" style="padding: 0"><3</a>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">#}
-{#            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">#}
-{#                <small class="text-muted pull-left ml-3">Project-Type</small>#}
-{#                <small class="text-muted pull-right mr-3">Date-Added</small>#}
-{#            </div>#}
-{#            <div class="card-body" style="padding: 0">#}
-{#                <h5 class="card-title ml-3 mr-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">Short Proj. Title Button</a>#}
-{#                </h5>#}
-{##}
-{#                <p class="card-text ml-4 mr-4">Some quick example text that describes the project and make up the bulk of the card's content.</p>#}
-{#            </div>#}
-{#            <div class="card-footer mt-1 mb-1" style="padding: 0">#}
-{#                <div class="pull-left ml-3">#}
-{#                    <a href="https://www.google.com" target="_blank" class="btn" style="padding: 0">#}
-{#                        @username#}
-{#                    </a>#}
-{#                </div>#}
-{#                <div class="pull-right mr-3">#}
-{#                    <small class="text-muted">1.1k</small>#}
-{#                    <a href="#" class="btn" style="padding: 0"><3</a>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#    </div>#}
 
     <div class="card-group mt-3 center-block" style="max-width: max-content;">
 
         {% for project in projects %}
-            {{ render_card(project, project.creator, current_user) }}
+            {{ render_card_given_privacy(project, project.creator, current_user) }}
         {% endfor %}
 
     </div>

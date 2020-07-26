@@ -18,6 +18,10 @@
     {#            {{ render_field(form.desc, tabindex=90) }}#}
 
                 {{ render_field(form.tags, tabindex=90) }}
+                <input type="radio" name="privacy" id="option1" value="PUBLIC" checked> PUBLIC </input><br>
+                <input type="radio" name="privacy" id="option2" value="NETWORK"> NETWORK </input><br>
+                <input type="radio" name="privacy" id="option3" value="PRIVATE"> PRIVATE </input><br>
+
                 {{ render_submit_field(form.submit) }}
 
             </form>

@@ -1,9 +1,9 @@
 {% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
 
-{% from "common/form_macros.html" import render_card %}
+{% from "common/form_macros.html" import render_card, render_card_given_privacy %}
 
 {% block content %}
-    <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%; min-height: 5rem">
+    <div class="card text-white bg-dark mt-3 mb-3 mr-3" style="width: 100%;min-width: 18rem; min-height: 5rem">
         <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
             <h5 class="card-title ml-3 mr-3 mb-1 text-center">TRENDING</h5>
         </div>
@@ -19,7 +19,7 @@
     <div class="card-group mt-3 center-block" style="max-width: max-content;">
 
         {% for project in projects %}
-            {{ render_card(project, project.creator, current_user) }}
+            {{ render_card_given_privacy(project, project.creator, current_user) }}
         {% endfor %}
 
     </div>

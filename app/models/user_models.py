@@ -80,8 +80,11 @@ class User(db.Model, UserMixin):
             self.followed.remove(user)
 
     def has_followed_user(self, user):
+        has_followed = False
         following = self.followed.all()
-        has_followed = user in following
+        following_user_ids = []
+        for f in following: following_user_ids.append(f.id)
+        has_followed = user.id in following_user_ids
         return has_followed
 
 
@@ -89,7 +92,7 @@ class User(db.Model, UserMixin):
         return Project.query.join(
             network, (network.c.followed_id == Project.creator_id)).filter(
             network.c.follower_id == self.id).order_by(
-            Project.date_added.desc())
+            Project.date_added.desc()).all()
 
 
 
