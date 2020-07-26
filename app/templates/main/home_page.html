@@ -1,7 +1,7 @@
 {% extends "main/main_base.html" %}  {# main/main_base.html extends layout.html #}
 
 {% block content %}
-    <h2>{%trans%}Welcome!{%endtrans%}</h2>
+    <h2 class="text-center">{%trans%}Welcome!{%endtrans%}</h2>
     <p><a href={{ url_for('user.register') }} class="text-white">{%trans%}Register{%endtrans%}</a></p>
 {#    <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>#}
     <p class="text-black"><a href={{ url_for('main.home_page') }} class="text-white">{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>

@@ -40,16 +40,7 @@
     {% endfor %}
 {%- endmacro %}
 
-{#{% macro render_delete_field(field, label=None, tabindex=None) -%}#}
-{#    {% if not label %}{% set label=field.label.text %}{% endif %}#}
-    {#<button type="submit" class="form-control btn btn-default btn-primary">{{label}}</button>#}
-{#    <a type="button" name="edit_button" method="POST" href="/main/edit_project/{{ project.id }}" value="{{ project.id }}" class="btn text-white bg-dark">Edit Project</a>#}
-{##}
-{#    <input type="button" class="text-white bg-danger pull-left" name="delete_btn" value="{{label}}"#}
-{#           {% if style  %} style="{{ styleinfo }}"#}
-{#           {% if tabindex %}tabindex="{{ tabindex }}"{% endif %}#}
-{#           >#}
-{#{%- endmacro %}#}
+
 
 {% macro render_submit_field(field, label=None, tabindex=None) -%}
     {% if not label %}{% set label=field.label.text %}{% endif %}
@@ -308,7 +299,9 @@
 {% macro render_card_given_privacy(project, user, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
     {% if project.privacy_setting == "PUBLIC" %}
         {{ render_public_card(project, user, current_user) }}
-    {% elif project.privacy_setting == "NETWORK" %}
+    {% elif project.privacy_setting == "NETWORK" and user.has_followed_user(current_user) %}
+        {{ render_network_card(project, user, current_user) }}
+    {% elif project.privacy_setting == "NETWORK" and user.id == current_user.id %}
         {{ render_network_card(project, user, current_user) }}
     {% elif project.privacy_setting == "PRIVATE" and user.id == current_user.id %}
         {{ render_private_card(project, user, current_user) }}

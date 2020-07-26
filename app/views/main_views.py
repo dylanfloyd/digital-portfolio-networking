@@ -10,7 +10,7 @@ from flask_user import current_user, login_required, roles_required, current_app
 from app import db
 from app.models.user_models import UserProfileForm, User, UsersRoles
 from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike, ProjectSearchForm
-from sqlalchemy import or_
+from sqlalchemy import or_, desc, asc
 import re
 # import flask_whooshalchemy as wa
 
@@ -62,27 +62,15 @@ def portfolio_page(username):
         user = User.query.filter(User.username == username).first()
         projects = user.projects
 
-        # print(projects)
-        # proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
-
+    # Initialize form
     form = request.form
+
+    # Process valid POST
     if request.method =='POST':
         proj_id = form.get('edit_button')
         return render_template('/main/edit_project.html', proj_id=proj_id)
 
-    # # Initialize form
-    # form = UserProfileForm(request.form, obj=current_user)
-    #
-    # # Process valid POST
-    # if request.method == 'POST' and form.validate():
-    #     # Copy form fields to user_profile fields
-    #     form.populate_obj(current_user)
-    #
-    #     # Save user_profile
-    #     db.session.commit()
-    #
-    #     # Redirect to home page
-    #     return redirect(url_for('main.home_page'))
+
 
     # Process GET or invalid POST
     return render_template('main/portfolio.html', current_user=current_user, user=user, projects=projects)  #, form=form)
@@ -92,29 +80,14 @@ def portfolio_page(username):
 @login_required
 def favorites_page():
     #TODO: Must be a more efficient way to query at scale and get projs and avoid for loop.
-    projects = Project.query.all()
-    fav_projects = Project.query.filter(ProjectLike.user_id == current_user.id).all()
+    projects = Project.query.order_by(desc(Project.date_added)).all()
+    # fav_projects = Project.query.filter(ProjectLike.user_id == current_user.id).all()
     fav_projects = []
     for proj in projects:
         if current_user.has_liked_project(proj):
             fav_projects.append(proj)
 
 
-    # # Initialize form
-    # form = UserProfileForm(request.form, obj=current_user)
-    #
-    # # Process valid POST
-    # if request.method == 'POST' and form.validate():
-    #     # Copy form fields to user_profile fields
-    #     form.populate_obj(current_user)
-    #
-    #     # Save user_profile
-    #     db.session.commit()
-    #
-    #     # Redirect to home page
-    #     return redirect(url_for('main.home_page'))
-
-    # Process GET or invalid POST
     return render_template('main/favorites.html', current_user=current_user, projects=fav_projects)  #, form=form)
 
 
@@ -124,21 +97,7 @@ def favorites_page():
 def trending_page():
     ##TODO: Add an if statement to check if anyone is logged in or not. Need a new render card for user not logged in.
     projects = Project.query.all()
-    # # Initialize form
-    # form = UserProfileForm(request.form, obj=current_user)
-    #
-    # # Process valid POST
-    # if request.method == 'POST' and form.validate():
-    #     # Copy form fields to user_profile fields
-    #     form.populate_obj(current_user)
-    #
-    #     # Save user_profile
-    #     db.session.commit()
-    #
-    #     # Redirect to home page
-    #     return redirect(url_for('main.home_page'))
 
-    # Process GET or invalid POST
     return render_template('main/trending.html', current_user=current_user, projects=projects)  #, form=form)
 
 
@@ -173,22 +132,9 @@ def specialize_page():
 @main_blueprint.route('/main/network', methods=['GET', 'POST'])
 @login_required
 def network_page():
-    # projects = Project.query.all()
-    # user_ids_following = []
-    # projects_from_network = []
-    # for proj in projects:
-    #     project_creator = User.query.filter(User.id == proj.creator_id).first()
-    #     if current_user.has_followed_user(project_creator):
-    #         projects_from_network.append(proj)
 
     projects_from_network = current_user.followed_projects()
 
-        # if proj.creator_id in user_ids_following:
-        #     projects_from_network.append(proj)
-        # else:
-        #     proj_creator = User.query.filter(User.id == proj.creator_id).first()
-        #     if current_user.has_followed_user(proj_creator):
-        #         projects_from_network.append(proj)
 
     return render_template('main/network.html', current_user=current_user, projects=projects_from_network)  #, form=form)
 
@@ -371,17 +317,26 @@ def search(search_form):
     if search_str == '':
         results = Project.query.all()
     else:
-        search_input = "%{0}%".format(search_str)
-        results = Project.query.filter(or_(Project.proj_title.like(search_input),
-                                            Project.proj_desc.like(search_input),
-                                            Project.proj_tags.like(search_input),
-                                            User.username.like(search_input)))
+        words = search_str.split(' ')
+        for word in words:
+            search_input = "%{0}%".format(word)
+            word_relevant_projects = Project.query.filter(or_(Project.proj_title.like(search_input),
+                                                Project.proj_desc.like(search_input),
+                                                Project.proj_tags.like(search_input),
+                                                User.username == search_input[1:-1],
+                                                User.first_name == search_input[1:-1],
+                                                User.last_name == search_input[1:-1])).distinct().all()
+            # for wrp in word_relevant_projects:
+            #     if wrp not in results:
+            #         results.append(wrp)
+            results.extend(word_relevant_projects)
 
-    if not results:
+    if len(results) == 0:
         flash('No results found. Please try searching for another term.')
         return redirect(url_for('main.search_page'))
     else:
-        return render_template('main/search_page.html', form=search_form, projects=results, current_user=current_user)
+        final_results = list(set(results).intersection(results))
+        return render_template('main/search_page.html', form=search_form, projects=final_results, current_user=current_user)
 
 
 @main_blueprint.route('/main/search_page', methods=['GET', 'POST'])
@@ -392,6 +347,9 @@ def search_page():
         return search(search_form)
     projects = []
     return render_template('main/search_page.html', form=search_form, projects=projects, current_user=current_user)  #, form=form)
+
+
+
 
 @main_blueprint.route('/main/delete_project/<int:proj_id>', methods=['GET'])
 @login_required
