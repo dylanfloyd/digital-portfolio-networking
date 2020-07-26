@@ -316,3 +316,35 @@
         {{ render_network_or_private_user_card(project, current_user) }}
     {% endif %}
 {%- endmacro %}
+
+{% macro render_card_given_privacy_not_logged_in(project, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
+    {% if project.privacy_setting == "PUBLIC" %}
+        {{ render_public_card_not_logged_in(project, current_user) }}
+    {% endif %}
+{%- endmacro %}
+
+{% macro render_public_card_not_logged_in(project, user, current_user, label=None, label_visible=true, right_url=None, right_label=None) -%}
+       <div class="card bg-white mb-3 mr-3" style="max-width: 18rem; min-width: 18rem; min-height: 18rem; text-color: #3AAFA9">
+            <div class="card-header mt-1 mb-1" style="padding: 0; padding-bottom: 0.25rem;">
+                <small class="text-muted pull-left ml-3">{{ project.likes.count() }} favorites</small>
+                <small class="text-muted pull-right mr-3">Posted: {{ project.date_added.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <div class="card-body" style="padding: 0">
+                <h5 class="card-title ml-3 mr-3">
+                    <a href="{{ project.proj_link }}" target="_blank" class="btn text-left" style="padding: 0; font-size: 1.5rem; white-space: pre-wrap">{{ project.proj_title }}</a>
+                </h5>
+
+                <p class="card-text ml-4 mr-4">{{ project.proj_desc }}</p>
+            </div>
+            <div class="card-footer mt-1 mb-1" style="padding: 0">
+                <div class="pull-left ml-3">
+                    <a href="/main/portfolio/{{ user.username }}" class="btn" style="padding: 0">
+                        @{{ user.username }}
+                    </a>
+                </div>
+                <div class="pull-right mr-3">
+                    <a href="{{ url_for('user.register') }}" class="btn" style="padding: 0">+ Favorite</a>
+                </div>
+            </div>
+        </div>
+{%- endmacro %}

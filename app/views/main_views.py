@@ -20,16 +20,40 @@ main_blueprint = Blueprint('main', __name__, template_folder='templates')
 # project_blueprint = Blueprint('project', __name__, template_folder='templates')
 
 # The Home page is accessible to anyone
-@main_blueprint.route('/')
+@main_blueprint.route('/', methods=['GET', 'POST'])
 def home_page():
-    return render_template('main/home_page.html')
+    if not current_user.is_authenticated:
+        search_form = ProjectSearchForm(request.form)
+        if search_form.validate_on_submit():
+        # if request.method == 'POST':
+            return search(search_form)
+        projects = []
+
+        return render_template('main/home_page.html', form=search_form, projects=projects, current_user=current_user)
+
+    else:
+
+        return redirect(url_for('main.specialize_page'))
+        # if request.method == 'GET':
+        #     projects = current_user.projects
+        #     # print(projects)
+        #     # proj_search_result = Project.query.filter(Project.id == 1).first() #will need to return all projects
+        #
+        # form = request.form
+        # if request.method =='POST':
+        #     proj_id = form.get('edit_button')
+        #     return render_template('/main/edit_project.html', proj_id=proj_id)
+        #
+        # return render_template('main/user_profile_page.html', current_user=current_user, projects=projects)
 
 
 # The User page is accessible to authenticated users (users that have logged in)
 @main_blueprint.route('/member')
 @login_required  # Limits access to authenticated users
 def member_page():
-    return render_template('main/user_page.html')
+    projects = current_user.projects
+    # return render_template('main/user_page.html')
+    return render_template('main/user_profile_page.html', current_user=current_user, projects=projects)
 
 
 # The Admin page is accessible to users with the 'admin' role
@@ -350,7 +374,10 @@ def search(search_form):
     else:
         final_results = list(set(results).intersection(results))
         final_results.sort(key=lambda x: x.num_favorites, reverse=True)
-        return render_template('main/search_page.html', form=search_form, projects=final_results, current_user=current_user)
+        if current_user.is_authenticated: #searching when logged in
+            return render_template('main/search_page.html', form=search_form, projects=final_results, current_user=current_user)
+        else: #searching without being logged in
+            return render_template('main/home_page.html', form=search_form, projects=final_results)
 
 
 @main_blueprint.route('/main/search_page', methods=['GET', 'POST'])
