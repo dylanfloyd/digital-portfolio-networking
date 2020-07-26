@@ -42,7 +42,13 @@
     <div class="card-group center-block" style="max-width: max-content;">
 
         {% for project in projects %}
-            {{ render_card_given_privacy(project, user, current_user) }}
+            {% if user.id != current_user.id %}
+                {{ render_card_given_privacy(project, user, current_user) }}
+            {% elif project.privacy_setting == "PUBLIC" %}
+{#            Gets the user the PUBLIC view of their portfolio outside of their network.#}
+                {{ render_card_given_privacy(project, user, current_user) }}
+            {% endif %}
+
         {% endfor %}
     </div>
 

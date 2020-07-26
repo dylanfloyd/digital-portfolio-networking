@@ -12,6 +12,7 @@ from app.models.user_models import UserProfileForm, User, UsersRoles
 from app.models.project_models import EditProjectForm, NewProjectForm, Project, ProjectLike, ProjectSearchForm
 from sqlalchemy import or_, desc, asc
 import re
+import datetime
 # import flask_whooshalchemy as wa
 
 main_blueprint = Blueprint('main', __name__, template_folder='templates')
@@ -96,7 +97,14 @@ def favorites_page():
 @main_blueprint.route('/main/trending', methods=['GET', 'POST'])
 def trending_page():
     ##TODO: Add an if statement to check if anyone is logged in or not. Need a new render card for user not logged in.
-    projects = Project.query.all()
+    # projects = Project.query.all()
+    today = datetime.date.today()
+    weekday = today.weekday()
+    delta = datetime.timedelta(weeks=1)
+    one_week_ago = today - delta
+
+
+    projects = Project.query.filter(Project.date_added >= one_week_ago).order_by(desc(Project.num_favorites)).all()
 
     return render_template('main/trending.html', current_user=current_user, projects=projects)  #, form=form)
 
@@ -292,8 +300,12 @@ def favorite_action(project_id, action):
     if action == 'favorite':
         current_user.like_project(project)
         db.session.commit()
+        project.num_favorites += 1
+        db.session.commit()
     if action == 'unfavorite':
         current_user.unlike_project(project)
+        db.session.commit()
+        project.num_favorites -= 1
         db.session.commit()
     return redirect(request.referrer)
 
@@ -315,27 +327,29 @@ def search(search_form):
     search_str = search_form.data['searchbar']
 
     if search_str == '':
-        results = Project.query.all()
+        results = Project.query.limit(100).all()
     else:
         words = search_str.split(' ')
         for word in words:
-            search_input = "%{0}%".format(word)
-            word_relevant_projects = Project.query.filter(or_(Project.proj_title.like(search_input),
+            search_input = "%{}%".format(word)
+            word_relevant_projects = Project.query.join(User, User.id == Project.creator_id).filter(or_(Project.proj_title.like(search_input),
                                                 Project.proj_desc.like(search_input),
                                                 Project.proj_tags.like(search_input),
-                                                User.username == search_input[1:-1],
-                                                User.first_name == search_input[1:-1],
-                                                User.last_name == search_input[1:-1])).distinct().all()
-            # for wrp in word_relevant_projects:
-            #     if wrp not in results:
-            #         results.append(wrp)
+                                                # User.username == search_input[1:-1],
+                                                # User.first_name == search_input[1:-1],
+                                                # User.last_name == search_input[1:-1])).distinct().all()
+                                                User.username.like(search_input),
+                                                User.first_name.like(search_input),
+                                                User.last_name.like(search_input))).distinct().all()
             results.extend(word_relevant_projects)
+
 
     if len(results) == 0:
         flash('No results found. Please try searching for another term.')
         return redirect(url_for('main.search_page'))
     else:
         final_results = list(set(results).intersection(results))
+        final_results.sort(key=lambda x: x.num_favorites, reverse=True)
         return render_template('main/search_page.html', form=search_form, projects=final_results, current_user=current_user)
 
 
