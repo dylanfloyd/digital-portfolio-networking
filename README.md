@@ -1,27 +1,16 @@
 # Insignia Prototype - GaTech OMSCS 6460 - Summer 2020
-The instructions below will explain how to run the web application locally. To avoid reinventing the wheel for this prototype, a starter app was used. A significant number of changes have been made and the two products are very different now. If you're interested in the what the starter app looks like, you can find it [here](https://github.com/lingthio/Flask-User-starter-app).
+The live website will temporarily be available [here](https://dylanfloyd.pythonanywhere.com). Feel free to test out creating your own user or logging in with the demo user: member@example.com / Password1
 
-After you've followed the instructions below, make sure to initialize the database before doing the runserver command:
+The instructions below will explain how to run the web application locally. Make sure to initialize the database BEFORE doing the runserver command:
 python manage.py init_db
 python manage.py runserver.
 
-Feel free to test out creating your own user or logging in with the demo user: member@example.com / Password1
-
-
 ----------------------------------------------------------------------------------------
-
-Flask-User starter app v1.0
-
-This code base serves as starting point for writing your next Flask application.
-
-This branch is for Flask-User v1.0.
-
-For Flask-User v0.6, see [the Flask-User-Starter-App v0.6 branch](https://github.com/lingthio/Flask-User-starter-app/tree/v0.6).
 
 ## Code characteristics
 
-* Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
-* Well organized directories with lots of comments
+* Developed using Python 3.6
+* Project directories:
     * app
         * commands
         * models
@@ -41,7 +30,7 @@ We assume that you have `git` and `virtualenv` and `virtualenvwrapper` installed
     # Clone the code repository into ~/dev/my_app
     mkdir -p ~/dev
     cd ~/dev
-    git clone https://github.com/lingthio/Flask-User-starter-app.git my_app
+    git clone https://github.com/dylanfloyd/digital-portfolio-networking my_app
 
     # Create the 'my_app' virtual environment
     mkvirtualenv -p PATH/TO/PYTHON my_app
@@ -123,11 +112,9 @@ With thanks to the following Flask extensions:
 * [Flask-Migrate](https://flask-migrate.readthedocs.io/)
 * [Flask-Script](https://flask-script.readthedocs.io/)
 * [Flask-User](http://flask-user.readthedocs.io/en/v0.6/)
-
-<!-- Please consider leaving this line. Thank you -->
-[Flask-User-starter-app](https://github.com/lingthio/Flask-User-starter-app) was used as a starting point for this code repository.
+* [Flask-User-starter-app](https://github.com/lingthio/Flask-User-starter-app) was used as a starting point for this code repository.
 
 
-## Authors
+## Author
+- Dylan Floyd -- dylan.floyd@gmail.com
 
-- Ling Thio -- ling.thio AT gmail DOT com
